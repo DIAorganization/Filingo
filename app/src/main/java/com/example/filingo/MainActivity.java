@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-/*
+
        setContentView(R.layout.main_frame_info);
        topicRecycler = findViewById(R.id.topic_chooser);
 
@@ -76,34 +76,34 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         topicRecycler.setLayoutManager(layoutManager);
         topicAdapter = new TopicAdapter(this, listOfTopics, MainActivity.this);
         topicRecycler.setAdapter(topicAdapter);
-*/
 
 
 
 
-        setContentView(R.layout.test_fragment);
-        testTopicName = findViewById(R.id.topic_name);
-        wordImg = findViewById(R.id.word_img);
-        wordValueOnChooseScreen = findViewById(R.id.choose_word_value);
-        wordTranslateOnChooseScreen = findViewById(R.id.choose_word_translate);
-        knowButton = findViewById(R.id.choose_know_button);
-        learnButton = findViewById(R.id.choose_learn_button);
-        heartFirst = findViewById(R.id.heart_1);
-        heartSecond = findViewById(R.id.heart_2);
-        heartThird = findViewById(R.id.heart_3);
-        nextButton = findViewById(R.id.next_button);
-        wordAudioImgButton = findViewById(R.id.word_audio_img_button);
-        letterRecycler = findViewById(R.id.letter_chooser);
-        wordTranslateOnTestScreen = findViewById(R.id.test_word_translate);
-        answerButtonBottomFirst = findViewById(R.id.answer_button_bottom_1);
-        answerButtonBottomSecond = findViewById(R.id.answer_button_bottom_2);
-        answerButtonBottomThird = findViewById(R.id.answer_button_bottom_3);
-        answerButtonBottomFourth = findViewById(R.id.answer_button_bottom_4);
-        answerButtonTopFirst = findViewById(R.id.answer_button_top_1);
-        answerButtonTopSecond = findViewById(R.id.answer_button_top_2);
-        answerButtonTopThird = findViewById(R.id.answer_button_top_3);
-        answerButtonTopFourth = findViewById(R.id.answer_button_top_4);
-        wordValueOnTestScreen = findViewById(R.id.test_word_value);
+
+//        setContentView(R.layout.test_fragment);
+//        testTopicName = findViewById(R.id.topic_name);
+//        wordImg = findViewById(R.id.word_img);
+//        wordValueOnChooseScreen = findViewById(R.id.choose_word_value);
+//        wordTranslateOnChooseScreen = findViewById(R.id.choose_word_translate);
+//        knowButton = findViewById(R.id.choose_know_button);
+//        learnButton = findViewById(R.id.choose_learn_button);
+//        heartFirst = findViewById(R.id.heart_1);
+//        heartSecond = findViewById(R.id.heart_2);
+//        heartThird = findViewById(R.id.heart_3);
+//        nextButton = findViewById(R.id.next_button);
+//        wordAudioImgButton = findViewById(R.id.word_audio_img_button);
+//        letterRecycler = findViewById(R.id.letter_chooser);
+//        wordTranslateOnTestScreen = findViewById(R.id.test_word_translate);
+//        answerButtonBottomFirst = findViewById(R.id.answer_button_bottom_1);
+//        answerButtonBottomSecond = findViewById(R.id.answer_button_bottom_2);
+//        answerButtonBottomThird = findViewById(R.id.answer_button_bottom_3);
+//        answerButtonBottomFourth = findViewById(R.id.answer_button_bottom_4);
+//        answerButtonTopFirst = findViewById(R.id.answer_button_top_1);
+//        answerButtonTopSecond = findViewById(R.id.answer_button_top_2);
+//        answerButtonTopThird = findViewById(R.id.answer_button_top_3);
+//        answerButtonTopFourth = findViewById(R.id.answer_button_top_4);
+//        wordValueOnTestScreen = findViewById(R.id.test_word_value);
 
         /*
         ChooseWord();
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
 
         TranslateTestFrameUaEn();
         */
-        TranslateTestFrameEnUa();
+        //TranslateTestFrameEnUa();
 
 
 
