@@ -1,0 +1,8 @@
+<vector
+    android:height="63.6dp"
+    android:width="105dp"
+    android:viewportHeight="87"
+    android:viewportWidth="140"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="@color/backgroud_for_buttons" android:pathData="M15.65,57c-21.88,-8.03 -19.32,-39.76 3.56,-44.17L83.01,0.51a23,23 0,0 1,21.69 7.47l29.05,33.3c10.11,11.59 6.22,29.64 -7.77,36.04l-15.87,7.26a23,23 0,0 1,-17.49 0.67L15.65,57Z"/>
+</vector>
