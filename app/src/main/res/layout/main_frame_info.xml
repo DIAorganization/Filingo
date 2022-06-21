@@ -16,12 +16,11 @@
         tools:layout_editor_absoluteY="0dp" />
 
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/info_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/round_outline_background_info"
-        android:clipToOutline="true"
+        app:shapeAppearanceOverlay="@style/round_image_20"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/top_info_horizontal_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/main_frame_vertical_right_guideline"
@@ -43,12 +42,13 @@
         app:layout_constraintTop_toTopOf="@+id/top_info_horizontal_bottom_guideline" />
 
 
-    <ImageView
+
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_icn"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:background="@drawable/round_outline_background_info"
-        android:clipToOutline="true"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/top_info_horizontal_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/main_frame_vertical_right_guideline"
@@ -56,7 +56,8 @@
         app:layout_constraintStart_toStartOf="@+id/main_frame_vertical_left_guideline"
         app:layout_constraintTop_toTopOf="@+id/top_info_horizontal_top_guideline"
         app:layout_constraintVertical_bias="0.134"
-        app:srcCompat="@drawable/user_icn" />
+        app:srcCompat="@drawable/user_icn"
+        app:shapeAppearanceOverlay="@style/round_image_30" />
 
     <TextView
         android:id="@+id/user_greetings"
@@ -95,13 +96,11 @@
         app:layout_constraintTop_toBottomOf="@+id/user_greetings" />
 
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/bottom_menu_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/round_outline_background_info"
-        android:clipToOutline="true"
-
+        app:shapeAppearanceOverlay="@style/round_image_10"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/bottom_menu_horizontal_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/bottom_menu_vertical_right_guideline"
@@ -181,7 +180,6 @@
         android:layout_width="196dp"
         android:layout_height="32dp"
         android:layout_marginBottom="16dp"
-
         app:layout_constraintBottom_toBottomOf="@+id/info_background"
         app:layout_constraintEnd_toEndOf="@+id/progress_text"
         app:layout_constraintHorizontal_bias="0.516"

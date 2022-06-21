@@ -1,5 +1,6 @@
 package com.example.filingo;
 
+import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -21,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LetterAdapter.OnItemClicked {
+public class MainActivity extends AppCompatActivity implements LetterAdapter.OnLetterClicked , TopicAdapter.OnTopicClicked {
 
 
 
@@ -54,17 +55,33 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnI
 
     RecyclerView topicRecycler; // topic_chooser;
     LetterAdapter letterAdapter;
+    TopicAdapter topicAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-     //   setContentView(R.layout.main_frame_info);
+/*
+       setContentView(R.layout.main_frame_info);
+       topicRecycler = findViewById(R.id.topic_chooser);
+
+        ArrayList<Topic> listOfTopics = new ArrayList<>();
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware"));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware"));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware"));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware"));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware"));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware"));
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        topicRecycler.setLayoutManager(layoutManager);
+        topicAdapter = new TopicAdapter(this, listOfTopics, MainActivity.this);
+        topicRecycler.setAdapter(topicAdapter);
+*/
 
 
 
 
         setContentView(R.layout.test_fragment);
-
         testTopicName = findViewById(R.id.topic_name);
         wordImg = findViewById(R.id.word_img);
         wordValueOnChooseScreen = findViewById(R.id.choose_word_value);
@@ -88,8 +105,8 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnI
         answerButtonTopFourth = findViewById(R.id.answer_button_top_4);
         wordValueOnTestScreen = findViewById(R.id.test_word_value);
 
-        //ChooseWord();
-
+        /*
+        ChooseWord();
 
         ArrayList<Character> listOfLetters = new ArrayList<>();
         listOfLetters.add('o');
@@ -97,20 +114,23 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnI
         listOfLetters.add('s');
         listOfLetters.add('u');
         listOfLetters.add('e');
-
-
+        listOfLetters.add('s');
+        listOfLetters.add('u');
+        listOfLetters.add('e');
+        listOfLetters.add('s');
+        listOfLetters.add('u');
+        listOfLetters.add('e');
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         letterRecycler.setLayoutManager(layoutManager);
         letterAdapter = new LetterAdapter(this, listOfLetters, MainActivity.this);
         letterRecycler.setAdapter(letterAdapter);
-
         AudioTestFrameEnEn();
 
 
-
-       // TranslateTestFrameUaEn();
-        //TranslateTestFrameEnUa();
+        TranslateTestFrameUaEn();
+        */
+        TranslateTestFrameEnUa();
 
 
 
@@ -214,7 +234,12 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnI
     }
 
     @Override
-    public void OnItemClicked(Character letter) {
+    public void OnLetterClicked(Character letter) {
+
+    }
+
+    @Override
+    public void OnTopicClicked(Topic topic) {
 
     }
 }
@@ -224,9 +249,9 @@ class LetterAdapter extends RecyclerView.Adapter<LetterAdapter.LetterViewHolder>
     Context context;
     List<Character> letterList;
     View lastSelected;
-    private OnItemClicked mListener;
+    private OnLetterClicked mListener;
 
-    public LetterAdapter(Context context, List<Character> letterList , OnItemClicked mListener) {
+    public LetterAdapter(Context context, List<Character> letterList , OnLetterClicked mListener) {
         this.context = context;
         this.letterList = letterList;
         this.mListener = mListener;
@@ -243,26 +268,24 @@ class LetterAdapter extends RecyclerView.Adapter<LetterAdapter.LetterViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull final LetterViewHolder holder, int position) {
-
         holder.letter.setText( letterList.get(position) + "");
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int pos = holder.getAdapterPosition();
-                if(lastSelected != null)
-                    ((CardView) lastSelected.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.backgroud_for_buttons));
-                ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setBackgroundColor(context.getResources().getColor(R.color.light_gray));
+             //   if(lastSelected != null)
+               //     ((CardView) lastSelected.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.backgroud_for_buttons));
+                ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.light_gray));
 
-                mListener.OnItemClicked(letterList.get(pos));
+                mListener.OnLetterClicked(letterList.get(pos));
                 lastSelected = holder.itemView;
             }
         });
 
     }
 
-    public interface OnItemClicked {
-        void OnItemClicked(Character letter);
+    public interface OnLetterClicked {
+        void OnLetterClicked(Character letter);
     }
 
     @Override
@@ -276,6 +299,78 @@ class LetterAdapter extends RecyclerView.Adapter<LetterAdapter.LetterViewHolder>
         public LetterViewHolder(@NonNull View itemView) {
             super(itemView);
             letter = itemView.findViewById(R.id.letter);
+        }
+    }
+
+}
+
+class Topic{
+
+    public Topic(Integer topicIcnUrl , String topicName){
+        this.topicIcnUrl = topicIcnUrl;
+        this.topicName = topicName;
+    }
+
+    public Integer topicIcnUrl;
+    public String topicName;
+    public Double topicProgress = 0.;//???
+}
+
+class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHolder> {
+
+    Context context;
+    List<Topic> topicList;
+    private OnTopicClicked mListener;
+
+    public TopicAdapter(Context context, List<Topic> topicList , OnTopicClicked mListener) {
+        this.context = context;
+        this.topicList = topicList;
+        this.mListener = mListener;
+    }
+
+    @NonNull
+    @Override
+    public TopicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.topic_chooser_item, parent, false);
+        return new TopicViewHolder(view);
+    }
+
+
+
+    @Override
+    public void onBindViewHolder(@NonNull final TopicViewHolder holder, int position) {
+        holder.topicIcn.setImageResource(topicList.get(position).topicIcnUrl);
+        holder.topicName.setText( topicList.get(position).topicName);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int pos = holder.getAdapterPosition();
+                mListener.OnTopicClicked(topicList.get(pos));
+            }
+        });
+
+    }
+
+    public interface OnTopicClicked {
+        void OnTopicClicked(Topic topic);
+    }
+
+    @Override
+    public int getItemCount() {
+        return topicList.size();
+    }
+
+
+    public static final class TopicViewHolder extends RecyclerView.ViewHolder{
+        ImageView topicIcn;
+        TextView topicName;
+        Double topicProgress;//???
+
+        public TopicViewHolder(@NonNull View itemView) {
+            super(itemView);
+            topicIcn = itemView.findViewById(R.id.topic_icn);
+            topicName  = itemView.findViewById(R.id.topic_name);
         }
     }
 

@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/background_2"
-        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteX="-52dp"
         tools:layout_editor_absoluteY="0dp" />
 
     <TextView
@@ -32,12 +32,11 @@
         app:layout_constraintTop_toTopOf="@+id/topic_name_guideline" />
 
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_panel_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/round_outline_background_2"
-        android:clipToOutline="true"
+        app:shapeAppearanceOverlay="@style/round_image_10"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/card_background_horizontal_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_background_vertical_right_guideline"
@@ -47,12 +46,12 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/background_1" />
 
-    <ImageView
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/word_img"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/round_outline_word_img"
-        android:clipToOutline="true"
+        app:shapeAppearanceOverlay="@style/round_image_5"
         android:scaleType="centerCrop"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/card_img_background_horizontal_bottom_guideline"
@@ -137,13 +136,14 @@
         app:layout_constraintVertical_bias="0.584" />
 
 
-    <ImageView
+
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/heart_1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="12dp"
-        android:background="@drawable/round_outline_heart_icn"
-        android:clipToOutline="true"
+        app:shapeAppearanceOverlay="@style/round_image_10"
         android:scaleType="centerCrop"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/heart_icn_horizontal_bottom_guideline"
@@ -153,13 +153,12 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/heart_icn" />
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/heart_2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/round_outline_heart_icn"
-        android:clipToOutline="true"
+        app:shapeAppearanceOverlay="@style/round_image_10"
         android:scaleType="centerCrop"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/heart_icn_horizontal_bottom_guideline"
@@ -169,13 +168,12 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/heart_icn" />
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/heart_3"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/round_outline_heart_icn"
-        android:clipToOutline="true"
+        app:shapeAppearanceOverlay="@style/round_image_10"
         android:scaleType="centerCrop"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/heart_icn_horizontal_bottom_guideline"
@@ -203,16 +201,14 @@
         app:layout_constraintStart_toStartOf="@+id/card_img_background_vertical_left_guideline" />
 
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/word_audio_img_button"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/round_outline_heart_icn"
-        android:clickable="true"
-        android:clipToOutline="true"
+        app:shapeAppearanceOverlay="@style/round_image_30"
         android:focusable="true"
         android:scaleType="centerCrop"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/word_audio_bottom_guideline"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/card_img_background_vertical_right_guideline"
@@ -446,7 +442,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.84"/>
+        app:layout_constraintGuide_percent="0.83994526" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/card_background_vertical_left_guideline"
@@ -530,14 +526,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.74"/>
+        app:layout_constraintGuide_percent="0.73"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/word_audio_bottom_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.83"/>
+        app:layout_constraintGuide_percent="0.82" />
 
 
     <androidx.constraintlayout.widget.Guideline
