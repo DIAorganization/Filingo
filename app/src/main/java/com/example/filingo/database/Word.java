@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 import java.util.LinkedList;
 
 @Entity
+public
 class Word {
     @PrimaryKey
     public int id;
