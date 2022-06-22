@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
 
     private static int numberOfTestToEndTesting = 0; // need to count number of test in testing
     private static int numberOfRightAnswers = 0;  // need to count right answers in testing
-    int chosenAnswer = -1; // to track chosen answer in test
+    private static int chosenAnswer = -1; // to track chosen answer in test
     String wordChosenByLetters = "";
 
     TextView testTopicName; // topic_name;
