@@ -24,6 +24,8 @@ import com.example.filingo.database.Word;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         for(int i=0; i<word.length(); i++) {
             listOfLetters.add(word.charAt(i));
         }
+        Collections.shuffle(listOfLetters); // set random order
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         letterRecycler.setLayoutManager(layoutManager);
