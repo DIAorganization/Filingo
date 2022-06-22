@@ -35,7 +35,10 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     private static int numberOfTestToEndTesting = 0; // need to count number of test in testing
     private static int numberOfRightAnswers = 0;  // need to count right answers in testing
     private static int chosenAnswer = -1; // to track chosen answer in test
-    String wordChosenByLetters = "";
+    private static String wordChosenByLetters = "";
+    private static final int START_LIVES = 3;
+    private static int lives = START_LIVES; // number of lives(hears) player currently have
+
 
     TextView testTopicName; // topic_name;
     ImageView wordImg; // word_img;
@@ -73,6 +76,20 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         super.onCreate(savedInstanceState);
 
         setTopicChoseView();
+    }
+
+    private void resetLives() {
+        lives = START_LIVES;
+        heartFirst.setVisibility(View.VISIBLE);
+        heartSecond.setVisibility(View.VISIBLE);
+        heartThird.setVisibility(View.VISIBLE);
+    }
+
+    private void loseLife() {
+        Log.d("TAG", "Wrong answer. - heart");
+        lives--;
+        if(lives==2) heartThird.setVisibility(View.GONE);
+        if(lives==1) heartSecond.setVisibility(View.GONE);
     }
 
     private void setLetterChooser(String word) {
@@ -152,6 +169,12 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         heartFirst = findViewById(R.id.heart_1);
         heartSecond = findViewById(R.id.heart_2);
         heartThird = findViewById(R.id.heart_3);
+
+        // Make hearts visible from start in every testing
+        heartFirst.setVisibility(View.VISIBLE);
+        heartSecond.setVisibility(View.VISIBLE);
+        heartThird.setVisibility(View.VISIBLE);
+
         nextButton = findViewById(R.id.next_button);
         wordAudioImgButton = findViewById(R.id.word_audio_img_button);
         letterRecycler = findViewById(R.id.letter_chooser);
@@ -173,9 +196,10 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         wordTranslateOnChooseScreen.setVisibility(View.VISIBLE);
         knowButton.setVisibility(View.VISIBLE);
         learnButton.setVisibility(View.VISIBLE);
-        heartFirst.setVisibility(View.GONE);
-        heartSecond.setVisibility(View.GONE);
-        heartThird.setVisibility(View.GONE);
+        // Don't uncomment. With this lives reset after every test part
+        //heartFirst.setVisibility(View.VISIBLE);
+        //heartSecond.setVisibility(View.VISIBLE);
+        //heartThird.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.GONE);
         wordAudioImgButton.setVisibility(View.GONE);
         letterRecycler.setVisibility(View.GONE);
@@ -197,9 +221,10 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         wordTranslateOnChooseScreen.setVisibility(View.GONE);
         knowButton.setVisibility(View.GONE);
         learnButton.setVisibility(View.GONE);
-        heartFirst.setVisibility(View.VISIBLE);
-        heartSecond.setVisibility(View.VISIBLE);
-        heartThird.setVisibility(View.VISIBLE);
+        // Don't uncomment. With this lives reset after every test part
+        //heartFirst.setVisibility(View.VISIBLE);
+        //heartSecond.setVisibility(View.VISIBLE);
+        //heartThird.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         wordAudioImgButton.setVisibility(View.VISIBLE);
         letterRecycler.setVisibility(View.VISIBLE);
@@ -222,9 +247,10 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         wordTranslateOnChooseScreen.setVisibility(View.GONE);
         knowButton.setVisibility(View.GONE);
         learnButton.setVisibility(View.GONE);
-        heartFirst.setVisibility(View.VISIBLE);
-        heartSecond.setVisibility(View.VISIBLE);
-        heartThird.setVisibility(View.VISIBLE);
+        // Don't uncomment. With this lives reset after every test part
+        //heartFirst.setVisibility(View.VISIBLE);
+        //heartSecond.setVisibility(View.VISIBLE);
+        //heartThird.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         wordAudioImgButton.setVisibility(View.GONE);
         letterRecycler.setVisibility(View.GONE);
@@ -246,9 +272,10 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         wordTranslateOnChooseScreen.setVisibility(View.GONE);
         knowButton.setVisibility(View.GONE);
         learnButton.setVisibility(View.GONE);
-        heartFirst.setVisibility(View.VISIBLE);
-        heartSecond.setVisibility(View.VISIBLE);
-        heartThird.setVisibility(View.VISIBLE);
+        // Don't uncomment. With this lives reset after every test part
+        //heartFirst.setVisibility(View.VISIBLE);
+        //heartSecond.setVisibility(View.VISIBLE);
+        //heartThird.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         wordAudioImgButton.setVisibility(View.VISIBLE);
         letterRecycler.setVisibility(View.GONE);
@@ -279,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
 
     private void launchTesting(String testingTopic, int numberOfTests) {
         setTestFragment();
+        resetLives();
         testTopicName.setText(testingTopic);
         numberOfTestToEndTesting = numberOfTests;
         numberOfRightAnswers = 0;
@@ -373,7 +401,12 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                         break;
                     case 1:
                         Log.d("TAG", "Word Selected By Letters: "+wordChosenByLetters);
-                        if(currentWord.english.equals(wordChosenByLetters)) numberOfRightAnswers++;
+                        if(currentWord.english.equals(wordChosenByLetters)) {
+                            numberOfRightAnswers++;
+                        } else {
+                            loseLife();
+                            if(lives==0) setTopicChoseView(); // test failed, back to menu
+                        }
                         break;
                     case 2:
                         switch (chosenAnswer) {
@@ -390,7 +423,12 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                                 answerText = answerButtonBottomFourth.getText().toString();
                                 break;
                         }
-                        if(answerText.equals(currentWord.english)) numberOfRightAnswers++;
+                        if(answerText.equals(currentWord.english)) {
+                            numberOfRightAnswers++;
+                        } else {
+                            loseLife();
+                            if(lives==0) setTopicChoseView(); // test failed, back to menu
+                        }
                         break;
                     case 3:
                         switch (chosenAnswer) {
@@ -407,10 +445,13 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                                 answerText = answerButtonTopFourth.getText().toString();
                                 break;
                         }
-                        for(String s: currentWord.ukrainian) {
-                            if(s.equals(answerText)) {
+                        for(int i=0; i < currentWord.ukrainian.size(); i++) {
+                            if(currentWord.ukrainian.get(i).equals(answerText)) {
                                 numberOfRightAnswers++;
                                 break;
+                            } else if(i==currentWord.ukrainian.size()-1) { // wrong answer
+                                loseLife();
+                                if(lives==0) setTopicChoseView(); // test failed, back to menu
                             }
                         }
                         break;
@@ -439,6 +480,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         });
         learnButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                loseLife();
                 if(numberOfTestToEndTesting > 0) {
                     launchRandomTestOnTopic(testingTopic);
                 } else {
