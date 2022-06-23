@@ -1,16 +1,12 @@
 package com.example.filingo;
 
-import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,15 +18,20 @@ import android.widget.TextView;
 
 import com.example.filingo.database.Word;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements LetterAdapter.OnLetterClicked , TopicAdapter.OnTopicClicked {
+
+    private static final int POINTS_FOR_TESTING = 5; // every word in test have this
+    private static final int POINTS_FOR_RIGHT_ANSWER = 5; // for each right answer
+    private static final int POINTS_FOR_SUCCESSFUL_TEST = 5; // up to 2 life losing test
+    private static final int POINTS_FOR_PERFECT_TEST = 5; // no life losing test
+
 
     private static int numberOfTestToEndTesting = 0; // need to count number of test in testing
     private static int numberOfRightAnswers = 0;  // need to count right answers in testing
@@ -38,7 +39,11 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     private static String wordChosenByLetters = "";
     private static final int START_LIVES = 3;
     private static int lives = START_LIVES; // number of lives(hears) player currently have
+    private static ArrayList<Word> allTopicWords; // we need all words from topic to get random answer options
+    private static ArrayList<Word> currentTestWords = new ArrayList<>(); // words(up to 4) that are in the test now
 
+
+    private static ArrayList<Word> allTopicWordsFakeDBData; // delete after DB will be full working
 
     TextView testTopicName; // topic_name;
     ImageView wordImg; // word_img;
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
-
+        generateFakeDBTopicWords();
         setTopicChoseView();
     }
 
@@ -197,10 +202,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         wordTranslateOnChooseScreen.setVisibility(View.VISIBLE);
         knowButton.setVisibility(View.VISIBLE);
         learnButton.setVisibility(View.VISIBLE);
-        // Don't uncomment. With this lives reset after every test part
-        //heartFirst.setVisibility(View.VISIBLE);
-        //heartSecond.setVisibility(View.VISIBLE);
-        //heartThird.setVisibility(View.VISIBLE);
+        heartFirst.setVisibility(View.GONE);
+        heartSecond.setVisibility(View.GONE);
+        heartThird.setVisibility(View.GONE);
         nextButton.setVisibility(View.GONE);
         wordAudioImgButton.setVisibility(View.GONE);
         letterRecycler.setVisibility(View.GONE);
@@ -302,69 +306,142 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
 
     @Override
     public void OnTopicClicked(Topic topic) {
-        launchTesting(topic.topicName, 5); // Start 10 tests
+        launchTesting(topic.topicName); // Start tests
     }
 
-    private void launchTesting(String testingTopic, int numberOfTests) {
+    private void launchTesting(String testingTopic) {
         setTestFragment();
-        resetLives();
         testTopicName.setText(testingTopic);
-        numberOfTestToEndTesting = numberOfTests;
-        numberOfRightAnswers = 0;
-        launchRandomTestOnTopic(testingTopic);
+        currentTestWords.clear();
+        ChooseWord();
+        launchWordsForLearningDemonstration(testingTopic);
     }
 
-    private void launchRandomTestOnTopic(String testingTopic) {
+    private void generateFakeDBTopicWords() {
+        allTopicWordsFakeDBData = new ArrayList<>();
+        for(int i=0; i<40; i++) {
+            Word word = new Word(); word.id = i; word.english = "word"+i;
+            {
+                LinkedList<String> temp = new LinkedList<>();
+                temp.add("переклад"+i);  temp.add("переклад"+i+"-"+1);
+                temp.add("переклад"+i+"-"+2); temp.add("переклад"+i+"-"+3);
+                word.ukrainian = temp;
+            }
+            word.audioUrl = null; word.imageUrl = null; word.topic = 1; word.memoryFactor = 0;
+            allTopicWordsFakeDBData.add(word);
+        }
+    }
+
+    private void launchWordsForLearningDemonstration(String topicName) {
+
+        // When DB will be ready replace allTopicWords getting by method that get all words(sorted with memoryFactor) from topic
+        allTopicWords = new ArrayList<>(allTopicWordsFakeDBData); // create by copying, need them to get random answer options
+
+        ArrayList<Word> filteredWords = new ArrayList<>(allTopicWords);
+
+        // Remove words with max memory factor
+        // Remove words that wad previously added to current learning/test list
+        Iterator<Word> itr = filteredWords.iterator();
+        while (itr.hasNext()) {
+            Word word = itr.next();
+            if (word.memoryFactor>=100 || currentTestWords.contains(word)) {
+                itr.remove();
+            }
+        }
+
+
+        // Get first 20 (by memoryFactor)
+        ArrayList<Word> demonstrationWords = new ArrayList<>();
+        for(int i=0; i < 20 && i < filteredWords.size(); i++) {
+            demonstrationWords.add(filteredWords.get(i)); // add up to 20 words
+        }
+        if(demonstrationWords.size()==0) {
+            if(currentTestWords.size()>0) { // we can't have 4 word, we need do test with what we can
+                startTesting();
+            } else {
+                Log.d("TAG", "No word to demonstrate. You learn every word");
+                setTopicChoseView();
+            }
+            return;
+        }
+        Collections.shuffle(demonstrationWords); // random demonstration order
+        wordValueOnChooseScreen.setText(demonstrationWords.get(0).english);
+        wordTranslateOnChooseScreen.setText(demonstrationWords.get(0).ukrainian.get(0));
+
+        knowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                demonstrationWords.get(0).memoryFactor+=50;
+                demonstrationWords.remove(0);
+                if(demonstrationWords.size()>0) {
+                    wordValueOnChooseScreen.setText(demonstrationWords.get(0).english);
+                    wordTranslateOnChooseScreen.setText(demonstrationWords.get(0).ukrainian.get(0));
+                } else {
+                    Log.d("TAG", "All words have been demonstrated. Start new cycle");
+                    launchWordsForLearningDemonstration(topicName);
+                }
+            }
+        });
+
+        learnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentTestWords.add(demonstrationWords.get(0));
+                demonstrationWords.remove(0);
+                if(currentTestWords.size()>3) {
+                    startTesting();
+                } else if(demonstrationWords.size()>0) {
+                    wordValueOnChooseScreen.setText(demonstrationWords.get(0).english);
+                    wordTranslateOnChooseScreen.setText(demonstrationWords.get(0).ukrainian.get(0));
+                } else {
+                    launchWordsForLearningDemonstration(topicName);
+                }
+            }
+        });
+    }
+
+    private void startTesting() {
+        for(Word word : currentTestWords) {
+            Log.d("TAG", "You will learn: "+word.english);
+            word.memoryFactor+=POINTS_FOR_TESTING;
+        }
+        numberOfTestToEndTesting=currentTestWords.size()*3; // 3 test for each word
+        numberOfRightAnswers = 0;
+        launchTest();
+        resetLives();
+    }
+
+    private void launchTest() {
         numberOfTestToEndTesting--;
         if(numberOfTestToEndTesting < 0) return; // stop if we finish all tests
-        // Words for testing(till we have full database)
-        Word currentWord = new Word(); currentWord.id = 1; currentWord.english = "Book";
-        {
-            LinkedList<String> temp = new LinkedList<>();
-            temp.add("Книга"); temp.add("Книжка"); temp.add("Том"); temp.add("Замовляти");
-            currentWord.ukrainian = temp;
-        }
-        currentWord.audioUrl = null; currentWord.imageUrl = null; currentWord.topic = 1; currentWord.memoryFactor = 0;
 
-        Word word2 = new Word(); word2.id = 1; word2.english = "House";
-        {
-            LinkedList<String> temp = new LinkedList<>();
-            temp.add("Будинок"); temp.add("Дім"); temp.add("Житло"); temp.add("Квартирувати");
-            word2.ukrainian = temp;
-        }
-        word2.audioUrl = null; word2.imageUrl = null; word2.topic = 1; word2.memoryFactor = 0;
+        Log.d("TAG", "Test "+(currentTestWords.size()*3-numberOfTestToEndTesting)+"/"+(currentTestWords.size()*3));
+        Word currentWord = currentTestWords.get(numberOfTestToEndTesting/4);
 
-        Word word3 = new Word(); word3.id = 1; word3.english = "Land";
-        {
-            LinkedList<String> temp = new LinkedList<>();
-            temp.add("Земля"); temp.add("Край"); temp.add("Приземлятись"); temp.add("Причалювати");
-            word3.ukrainian = temp;
-        }
-        word3.audioUrl = null; word3.imageUrl = null; word3.topic = 1; word3.memoryFactor = 0;
-
-        Word word4 = new Word(); word4.id = 1; word4.english = "Fly";
-        {
-            LinkedList<String> temp = new LinkedList<>();
-            temp.add("Політ"); temp.add("Летіти"); temp.add("Літати"); temp.add("Майоріти");
-            word4.ukrainian = temp;
-        }
-        word4.audioUrl = null; word4.imageUrl = null; word4.topic = 1; word4.memoryFactor = 0;
+        // Additional words for testing options(till we have full database)
+        Word word2 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
+        while(word2==currentWord)
+            word2 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
+        Word word3 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
+        while(word3==currentWord || word3 ==word2)
+            word3 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
+        Word word4 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
+        while(word4==currentWord || word4 ==word2 || word4==word3)
+            word4 =allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
         //
 
-        int testType = (new Random()).nextInt(4); // random test type
+
+
+        int testType = numberOfTestToEndTesting%3; // test type
         setChosenAnswer(-1);
         wordChosenByLetters = "";
+
         switch (testType) {
             case 0:
-                ChooseWord();
-                wordValueOnChooseScreen.setText(currentWord.english);
-                wordTranslateOnChooseScreen.setText(word2.ukrainian.get(0));
-                break;
-            case 1:
                 AudioTestFrameEnEn();
                 setLetterChooser(currentWord.english);
                 break;
-            case 2:
+            case 1:
                 TranslateTestFrameUaEn();
                 wordTranslateOnTestScreen.setText(currentWord.ukrainian.get(0));
                 answerButtonBottomFirst.setText(currentWord.english);
@@ -376,7 +453,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                 answerButtonBottomFourth.setText(word3.english);
                 answerButtonBottomFourth.setOnClickListener(x -> setChosenAnswer(3));
                 break;
-            case 3:
+            case 2:
                 TranslateTestFrameEnUa();
                 wordValueOnTestScreen.setText(currentWord.english);
                 answerButtonTopFirst.setText(word3.ukrainian.get(0));
@@ -398,18 +475,16 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                 String answerText = "";
                 switch (testType) {
                     case 0:
-                        // we give + right answer if user click "know button"
-                        break;
-                    case 1:
                         Log.d("TAG", "Word Selected By Letters: "+wordChosenByLetters);
                         if(currentWord.english.equals(wordChosenByLetters)) {
                             numberOfRightAnswers++;
+                            currentWord.memoryFactor+=POINTS_FOR_RIGHT_ANSWER;
                         } else {
                             loseLife();
                             if(lives==0) setTopicChoseView(); // test failed, back to menu
                         }
                         break;
-                    case 2:
+                    case 1:
                         switch (chosenAnswer) {
                             case 0:
                                 answerText = answerButtonBottomFirst.getText().toString();
@@ -426,12 +501,13 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                         }
                         if(answerText.equals(currentWord.english)) {
                             numberOfRightAnswers++;
+                            currentWord.memoryFactor+=POINTS_FOR_RIGHT_ANSWER;
                         } else {
                             loseLife();
                             if(lives==0) setTopicChoseView(); // test failed, back to menu
                         }
                         break;
-                    case 3:
+                    case 2:
                         switch (chosenAnswer) {
                             case 0:
                                 answerText = answerButtonTopFirst.getText().toString();
@@ -449,6 +525,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                         for(int i=0; i < currentWord.ukrainian.size(); i++) {
                             if(currentWord.ukrainian.get(i).equals(answerText)) {
                                 numberOfRightAnswers++;
+                                currentWord.memoryFactor+=POINTS_FOR_RIGHT_ANSWER;
                                 break;
                             } else if(i==currentWord.ukrainian.size()-1) { // wrong answer
                                 loseLife();
@@ -460,31 +537,16 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                         //
                 }
                 if(numberOfTestToEndTesting > 0) {
-                    launchRandomTestOnTopic(testingTopic);
+                    launchTest();
                 } else {
-                    Log.d("TAG", "Right Answers: "+numberOfRightAnswers);
-                    setTopicChoseView();
-                }
-            }
-        });
-        knowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                numberOfRightAnswers++;
-                if(numberOfTestToEndTesting > 0) {
-                    launchRandomTestOnTopic(testingTopic);
-                } else {
-                    Log.d("TAG", "Right Answers: "+numberOfRightAnswers);
-                    setTopicChoseView();
-                }
-            }
-        });
-        learnButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                loseLife();
-                if(numberOfTestToEndTesting > 0) {
-                    launchRandomTestOnTopic(testingTopic);
-                } else {
+                    if(lives>0) {
+                        for(Word word: currentTestWords)
+                            word.memoryFactor+=POINTS_FOR_SUCCESSFUL_TEST;
+                    }
+                    if(lives>2) {
+                        for(Word word: currentTestWords)
+                            word.memoryFactor+=POINTS_FOR_PERFECT_TEST;
+                    }
                     Log.d("TAG", "Right Answers: "+numberOfRightAnswers);
                     setTopicChoseView();
                 }
