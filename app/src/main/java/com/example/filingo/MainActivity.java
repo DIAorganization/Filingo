@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
 
         setTopicChoseView();
