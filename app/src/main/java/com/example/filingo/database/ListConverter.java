@@ -12,7 +12,7 @@ class ListConverter {
             builder.append(s);
             builder.append(';');
         }
-        builder.deleteCharAt(builder.length());
+        builder.deleteCharAt(builder.length()-1);
         return builder.toString();
     }
 
