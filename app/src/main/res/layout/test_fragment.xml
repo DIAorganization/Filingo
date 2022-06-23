@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/background_2"
+        app:srcCompat="@drawable/background_4"
         tools:layout_editor_absoluteX="-52dp"
         tools:layout_editor_absoluteY="0dp" />
 
@@ -36,7 +36,6 @@
         android:id="@+id/img_panel_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:shapeAppearanceOverlay="@style/round_image_10"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/card_background_horizontal_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_background_vertical_right_guideline"
@@ -44,8 +43,8 @@
         app:layout_constraintStart_toStartOf="@+id/card_background_vertical_left_guideline"
         app:layout_constraintTop_toTopOf="@+id/card_background_horizontal_top_guideline"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/background_1" />
-
+        app:shapeAppearanceOverlay="@style/round_image_10"
+        app:srcCompat="@drawable/background_2_1" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/word_img"

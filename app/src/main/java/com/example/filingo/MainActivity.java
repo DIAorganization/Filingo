@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.filingo.adapters.*;
 import com.example.filingo.database.Word;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements LetterAdapter.OnLetterClicked , TopicAdapter.OnTopicClicked {
+public class MainActivity extends AppCompatActivity implements LetterAdapter.OnLetterClicked , TopicAdapter.OnTopicClicked , TenseAdapter.OnTenseClicked {
 
     private static final int POINTS_FOR_TESTING = 5; // every word in test have this
     private static final int POINTS_FOR_RIGHT_ANSWER = 5; // for each right answer
@@ -75,15 +76,25 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
 
 
     RecyclerView topicRecycler; // topic_chooser;
+    RecyclerView tensesRecycler; // tenses_chooser;
+
     LetterAdapter letterAdapter;
     TopicAdapter topicAdapter;
+    TenseAdapter tenseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.start_app_layout);
+        setTensesChoseView();
+        /*
+
         generateFakeDBTopicWords(40);
         setTopicChoseView();
+
+         */
     }
 
     private void resetLives() {
@@ -146,6 +157,33 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
             default:
 
         }
+    }
+
+    private void setTensesChoseView() {
+        setContentView(R.layout.tenses_info_layout);
+        tensesRecycler = findViewById(R.id.tenses_chooser);
+
+        List<String> listOfTenses = new ArrayList<>();
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+
+
+
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        tensesRecycler.setLayoutManager(layoutManager);
+        tenseAdapter = new TenseAdapter(this, listOfTenses, MainActivity.this);
+        tensesRecycler.setAdapter(tenseAdapter);
     }
 
     private void setTopicChoseView() {
@@ -296,6 +334,11 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         answerButtonTopThird.setVisibility(View.VISIBLE);
         answerButtonTopFourth.setVisibility(View.VISIBLE);
         wordValueOnTestScreen.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void OnTenseClicked(int pos) {
+
     }
 
     @Override
@@ -561,139 +604,6 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     }
 }
 
-class LetterAdapter extends RecyclerView.Adapter<LetterAdapter.LetterViewHolder> {
-
-    Context context;
-    List<Character> letterList;
-    List<Boolean> lettersAreChosen;
-    View lastSelected;
-    private OnLetterClicked mListener;
-
-    public LetterAdapter(Context context, List<Character> letterList , OnLetterClicked mListener) {
-        this.context = context;
-        this.letterList = letterList;
-        this.lettersAreChosen = new ArrayList<>();
-        for(int i=0; i<letterList.size(); i++) { // fill with 'false' value
-            lettersAreChosen.add(false);
-        }
-        this.mListener = mListener;
-    }
-
-    @NonNull
-    @Override
-    public LetterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.letter_chooser_item, parent, false);
-        return new LetterViewHolder(view);
-    }
 
 
 
-    @Override
-    public void onBindViewHolder(@NonNull final LetterViewHolder holder, int position) {
-        holder.letter.setText( letterList.get(position) + "");
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int pos = holder.getAdapterPosition();
-             //   if(lastSelected != null)
-               //     ((CardView) lastSelected.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.backgroud_for_buttons));
-                ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.light_gray));
-
-                mListener.OnLetterClicked(pos);
-                lastSelected = holder.itemView;
-            }
-        });
-
-    }
-
-    public interface OnLetterClicked {
-        void OnLetterClicked(int pos);
-    }
-
-    @Override
-    public int getItemCount() {
-        return letterList.size();
-    }
-
-
-    public static final class LetterViewHolder extends RecyclerView.ViewHolder{
-        TextView letter;
-        public LetterViewHolder(@NonNull View itemView) {
-            super(itemView);
-            letter = itemView.findViewById(R.id.letter);
-        }
-    }
-
-}
-
-class Topic{
-
-    public Topic(Integer topicIcnUrl , String topicName){
-        this.topicIcnUrl = topicIcnUrl;
-        this.topicName = topicName;
-    }
-
-    public Integer topicIcnUrl;
-    public String topicName;
-    public Double topicProgress = 0.;//???
-}
-
-class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHolder> {
-
-    Context context;
-    List<Topic> topicList;
-    private OnTopicClicked mListener;
-
-    public TopicAdapter(Context context, List<Topic> topicList , OnTopicClicked mListener) {
-        this.context = context;
-        this.topicList = topicList;
-        this.mListener = mListener;
-    }
-
-    @NonNull
-    @Override
-    public TopicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.topic_chooser_item, parent, false);
-        return new TopicViewHolder(view);
-    }
-
-
-
-    @Override
-    public void onBindViewHolder(@NonNull final TopicViewHolder holder, int position) {
-        holder.topicIcn.setImageResource(topicList.get(position).topicIcnUrl);
-        holder.topicName.setText( topicList.get(position).topicName);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int pos = holder.getAdapterPosition();
-                mListener.OnTopicClicked(topicList.get(pos));
-            }
-        });
-
-    }
-
-    public interface OnTopicClicked {
-        void OnTopicClicked(Topic topic);
-    }
-
-    @Override
-    public int getItemCount() {
-        return topicList.size();
-    }
-
-
-    public static final class TopicViewHolder extends RecyclerView.ViewHolder{
-        ImageView topicIcn;
-        TextView topicName;
-        Double topicProgress;//???
-
-        public TopicViewHolder(@NonNull View itemView) {
-            super(itemView);
-            topicIcn = itemView.findViewById(R.id.topic_icn);
-            topicName  = itemView.findViewById(R.id.topic_name);
-        }
-    }
-
-}

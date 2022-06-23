@@ -56,8 +56,8 @@
         app:layout_constraintStart_toStartOf="@+id/main_frame_vertical_left_guideline"
         app:layout_constraintTop_toTopOf="@+id/top_info_horizontal_top_guideline"
         app:layout_constraintVertical_bias="0.134"
-        app:srcCompat="@drawable/user_icn"
-        app:shapeAppearanceOverlay="@style/round_image_30" />
+        app:srcCompat="@drawable/icn_user"
+        app:shapeAppearanceOverlay="@style/round_image_45" />
 
     <TextView
         android:id="@+id/user_greetings"
