@@ -1,33 +1,29 @@
 package com.example.filingo.database;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
+
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Single;
 
 @Dao
 interface WordDao {
-    @Query("SELECT * FROM word")
-    Single<List<Word>> getAll();
+    @Query("SELECT * FROM wordTable")
+    LiveData<List<Word>> getAll();
 
-    @Query("SELECT * FROM word WHERE id IN (:wordIds)")
-    Single<List<Word>> loadAllByIds(int[] wordIds);
-
-    @Query("SELECT * FROM word WHERE english LIKE :eng LIMIT 1")
-    Single<Word> findByName(String eng);
+    @Query("SELECT * FROM wordTable WHERE topic = :topic")
+    LiveData<List<Word>> getByTopic(int topic);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Completable insertAll(Word... words);
+    void insert(Word word);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Completable insert(Word word);
+    @Update
+    int update(Word word);
 
-    @Delete
-    Completable delete(Word word);
+
 }
