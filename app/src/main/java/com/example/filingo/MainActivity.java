@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     private static ArrayList<Word> allTopicWords; // we need all words from topic to get random answer options
     private static ArrayList<Word> currentTestWords = new ArrayList<>(); // words(up to 4) that are in the test now
 
+    private static ArrayList<Integer> testKeys; // needed for test generation in random order
+
 
     private static ArrayList<Word> allTopicWordsFakeDBData; // delete after DB will be full working
 
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
-        generateFakeDBTopicWords();
+        generateFakeDBTopicWords(40);
         setTopicChoseView();
     }
 
@@ -317,9 +319,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         launchWordsForLearningDemonstration(testingTopic);
     }
 
-    private void generateFakeDBTopicWords() {
+    private void generateFakeDBTopicWords(int numberOfWords) {
         allTopicWordsFakeDBData = new ArrayList<>();
-        for(int i=0; i<40; i++) {
+        for(int i=0; i<numberOfWords; i++) {
             Word word = new Word(); word.id = i; word.english = "word"+i;
             {
                 LinkedList<String> temp = new LinkedList<>();
@@ -406,6 +408,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
             word.memoryFactor+=POINTS_FOR_TESTING;
         }
         numberOfTestToEndTesting=currentTestWords.size()*3; // 3 test for each word
+        testKeys = new ArrayList<>();
+        for(int i=0; i<numberOfTestToEndTesting; i++) testKeys.add(i);
+        Collections.shuffle(testKeys);
         numberOfRightAnswers = 0;
         launchTest();
         resetLives();
@@ -414,9 +419,10 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     private void launchTest() {
         numberOfTestToEndTesting--;
         if(numberOfTestToEndTesting < 0) return; // stop if we finish all tests
+        int testKey = testKeys.get(numberOfTestToEndTesting);
 
         Log.d("TAG", "Test "+(currentTestWords.size()*3-numberOfTestToEndTesting)+"/"+(currentTestWords.size()*3));
-        Word currentWord = currentTestWords.get(numberOfTestToEndTesting/4);
+        Word currentWord = currentTestWords.get(testKey/4);
 
         // Additional words for testing options(till we have full database)
         Word word2 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
@@ -432,7 +438,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
 
 
 
-        int testType = numberOfTestToEndTesting%3; // test type
+        int testType = testKey%3; // test type
         setChosenAnswer(-1);
         wordChosenByLetters = "";
 
