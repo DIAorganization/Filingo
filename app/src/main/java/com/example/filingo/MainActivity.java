@@ -12,12 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.filingo.adapters.*;
 import com.example.filingo.database.Word;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.test_fragment);
+        setTestAnimationWorking();
         //setTensesChoseView();
         /*
 
@@ -157,6 +160,32 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
             default:
 
         }
+    }
+
+    private void setTestAnimationWorking(){
+        setContentView(R.layout.test_fragment);
+
+        ShapeableImageView img = findViewById(R.id.word_img);
+        Button nextButton = findViewById(R.id.next_button);
+
+        nextButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View arg0) {
+                Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+                Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+
+                if (img.getVisibility() == View.INVISIBLE) {
+                    img.startAnimation(slideUp);
+                    img.setVisibility(View.VISIBLE);
+                }else{
+                    img.startAnimation(slideDown);
+                    img.setVisibility(View.INVISIBLE);
+                }
+            }
+            });
+
+
     }
 
     private void setTensesChoseView() {
