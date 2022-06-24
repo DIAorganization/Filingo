@@ -1,18 +1,14 @@
 package com.example.filingo;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -177,16 +173,44 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
 
             @Override
             public void onClick(View arg0) {
-                Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
-                Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
-
-                if (img.getVisibility() == View.INVISIBLE) {
-                    img.startAnimation(slideUp);
+                Animation hideImg = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.hide_img);
+                Animation showImg = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.show_img);
+/*
+                if (img.getVisibility() == View.GONE) {
                     img.setVisibility(View.VISIBLE);
                 }else{
-                    img.startAnimation(slideDown);
-                    img.setVisibility(View.INVISIBLE);
+
                 }
+*/
+
+
+                hideImg.setAnimationListener(new Animation.AnimationListener() {
+
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        img.setImageResource(R.drawable.hardware_icn);
+                        img.startAnimation(showImg);
+                    }
+
+                });
+                img.startAnimation(hideImg);
+               // img.setVisibility(View.GONE);
+
+               // img.setImageResource(R.drawable.hardware_icn);
+            //    img.setVisibility(View.VISIBLE);
+                //img.startAnimation(showImg);
             }
             });
 
