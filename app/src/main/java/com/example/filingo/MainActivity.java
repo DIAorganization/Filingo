@@ -12,6 +12,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.filingo.adapters.*;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     private static final int POINTS_FOR_PERFECT_TEST = 5; // no life losing test
 
 
+    private String currentTestTopicName = "";
     private static int numberOfTestToEndTesting = 0; // need to count number of test in testing
     private static int numberOfRightAnswers = 0;  // need to count right answers in testing
     private static int chosenAnswer = -1; // to track chosen answer in test
@@ -81,19 +83,22 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     TopicAdapter topicAdapter;
     TenseAdapter tenseAdapter;
 
+    // Results screen elements
+    Button againButton;
+    Button exitTestButton;
+    TextView testProgressTextView;
+    ProgressBar testProgressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
 
-        setTestAnimationWorking();
+        //setTestAnimationWorking();
         //setTensesChoseView();
-        /*
 
         generateFakeDBTopicWords(40);
         setTopicChoseView();
-
-         */
     }
 
     private void resetLives() {
@@ -210,6 +215,33 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
             });
 
 
+    }
+
+    private void setTestResultView() {
+        setContentView(R.layout.finish_test);
+        againButton=findViewById(R.id.finish_test_again_button);
+        exitTestButton=findViewById(R.id.finish_test_exit_button);
+        testProgressTextView=findViewById(R.id.finish_test_progress_text);
+        testProgressBar=findViewById(R.id.finish_test_progressBar);
+
+        againButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchTesting(currentTestTopicName);
+            }
+        });
+
+        exitTestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setTopicChoseView();
+            }
+        });
+
+        testProgressTextView.setText("Test has been PASSED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWords.size()*3));
+        if(lives<=0)
+            testProgressTextView.setText("Test has been FAILED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWords.size()*3));
+        testProgressBar.setProgress(numberOfRightAnswers/(currentTestWords.size()*3));
     }
 
     private void setTensesChoseView() {
@@ -408,6 +440,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     }
 
     private void launchTesting(String testingTopic) {
+        currentTestTopicName=testingTopic;
         setTestFragment();
         testTopicName.setText(testingTopic);
         currentTestWords.clear();
@@ -521,16 +554,21 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         Word currentWord = currentTestWords.get(testKey/4);
 
         // Additional words for testing options(till we have full database)
-        Word word2 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        while(word2==currentWord)
-            word2 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        Word word3 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        while(word3==currentWord || word3 ==word2)
-            word3 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        Word word4 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        while(word4==currentWord || word4 ==word2 || word4==word3)
-            word4 =allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        //
+        ArrayList<Word> testOptions = new ArrayList<>();
+        testOptions.add(currentWord);
+
+        for(int i=0; i<3; i++) {  // Add incorrect options
+            Word optionWord = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
+            for(int j=0; j<testOptions.size(); j++) {
+                if(optionWord.id == testOptions.get(j).id) {
+                    optionWord = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
+                    j=-1; // start loop again
+                    continue;
+                }
+            }
+            testOptions.add(optionWord);
+        }
+        Collections.shuffle(testOptions);
 
 
 
@@ -546,25 +584,25 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
             case 1:
                 TranslateTestFrameUaEn();
                 wordTranslateOnTestScreen.setText(currentWord.ukrainian.get(0));
-                answerButtonBottomFirst.setText(currentWord.english);
+                answerButtonBottomFirst.setText(testOptions.get(0).english);
                 answerButtonBottomFirst.setOnClickListener(x -> {setChosenAnswer(0);});
-                answerButtonBottomSecond.setText(word2.english);
+                answerButtonBottomSecond.setText(testOptions.get(1).english);
                 answerButtonBottomSecond.setOnClickListener(x -> setChosenAnswer(1));
-                answerButtonBottomThird.setText(word4.english);
+                answerButtonBottomThird.setText(testOptions.get(2).english);
                 answerButtonBottomThird.setOnClickListener(x -> setChosenAnswer(2));
-                answerButtonBottomFourth.setText(word3.english);
+                answerButtonBottomFourth.setText(testOptions.get(3).english);
                 answerButtonBottomFourth.setOnClickListener(x -> setChosenAnswer(3));
                 break;
             case 2:
                 TranslateTestFrameEnUa();
                 wordValueOnTestScreen.setText(currentWord.english);
-                answerButtonTopFirst.setText(word3.ukrainian.get(0));
+                answerButtonTopFirst.setText(testOptions.get(0).ukrainian.get(0));
                 answerButtonTopFirst.setOnClickListener(x -> setChosenAnswer(0));
-                answerButtonTopSecond.setText(word4.ukrainian.get(0));
+                answerButtonTopSecond.setText(testOptions.get(1).ukrainian.get(0));
                 answerButtonTopSecond.setOnClickListener(x -> setChosenAnswer(1));
-                answerButtonTopThird.setText(currentWord.ukrainian.get(0));
+                answerButtonTopThird.setText(testOptions.get(2).ukrainian.get(0));
                 answerButtonTopThird.setOnClickListener(x -> setChosenAnswer(2));
-                answerButtonTopFourth.setText(word2.ukrainian.get(0));
+                answerButtonTopFourth.setText(testOptions.get(3).ukrainian.get(0));
                 answerButtonTopFourth.setOnClickListener(x -> setChosenAnswer(3));
                 break;
             default:
@@ -583,7 +621,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                             currentWord.memoryFactor+=POINTS_FOR_RIGHT_ANSWER;
                         } else {
                             loseLife();
-                            if(lives==0) setTopicChoseView(); // test failed, back to menu
+                            if(lives==0) {
+                                setTestResultView(); // test failed, back to menu
+                            }
                         }
                         break;
                     case 1:
@@ -606,8 +646,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                             currentWord.memoryFactor+=POINTS_FOR_RIGHT_ANSWER;
                         } else {
                             loseLife();
-                            if(lives==0) setTopicChoseView(); // test failed, back to menu
-                        }
+                            if(lives==0) {
+                                setTestResultView(); // test failed, back to menu
+                            }                        }
                         break;
                     case 2:
                         switch (chosenAnswer) {
@@ -631,8 +672,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                                 break;
                             } else if(i==currentWord.ukrainian.size()-1) { // wrong answer
                                 loseLife();
-                                if(lives==0) setTopicChoseView(); // test failed, back to menu
-                            }
+                                if(lives==0) {
+                                    setTestResultView(); // test failed, back to menu
+                                }                            }
                         }
                         break;
                     default:
@@ -650,7 +692,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                             word.memoryFactor+=POINTS_FOR_PERFECT_TEST;
                     }
                     Log.d("TAG", "Right Answers: "+numberOfRightAnswers);
-                    setTopicChoseView();
+                    setTestResultView();
                 }
             }
         });
