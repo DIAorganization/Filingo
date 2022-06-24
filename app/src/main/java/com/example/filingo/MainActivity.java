@@ -1,9 +1,12 @@
 package com.example.filingo;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.filingo.adapters.*;
 import com.example.filingo.database.Word;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -92,12 +96,12 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
-
+        setStartWindow();
         //setTestAnimationWorking();
         //setTensesChoseView();
 
-        generateFakeDBTopicWords(40);
-        setTopicChoseView();
+        //generateFakeDBTopicWords(40);
+        //setTopicChoseView();
     }
 
     private void resetLives() {
@@ -284,6 +288,32 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         if(lives<=0)
             testProgressTextView.setText("Test has been FAILED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWords.size()*3));
         testProgressBar.setProgress(numberOfRightAnswers/(currentTestWords.size()*3));
+    }
+
+    private void setStartWindow(){
+        setContentView(R.layout.start_app_layout);
+        ShapeableImageView userImg = findViewById(R.id.start_app_user_icn);
+
+        userImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImagePicker.with(MainActivity.this)
+                        .crop()	    			//Crop image(Optional), Check Customization for more option
+                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                        .start();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        ShapeableImageView userImg = findViewById(R.id.start_app_user_icn);
+        Uri uri = data.getData();
+        userImg.setImageURI(uri);
     }
 
     private void setTensesChoseView() {
