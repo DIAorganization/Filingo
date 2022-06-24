@@ -16,9 +16,6 @@ interface WordDao {
     @Query("SELECT * FROM wordTable")
     LiveData<List<Word>> getAll();
 
-    @Query("SELECT * FROM wordTable WHERE topic = :topic")
-    LiveData<List<Word>> getByTopic(int topic);
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Word word);
 

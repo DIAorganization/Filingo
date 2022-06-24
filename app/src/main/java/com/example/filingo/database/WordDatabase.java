@@ -25,7 +25,7 @@ abstract class WordDatabase extends RoomDatabase {
             synchronized (WordDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    WordDatabase.class, "word_database")
+                                    WordDatabase.class, "word_database.db").createFromAsset("databases/packagedWordDb.db")
                             .build();
                 }
             }
