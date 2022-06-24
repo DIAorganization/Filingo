@@ -5,10 +5,22 @@
         <item name="cornerSize">5dp</item>
     </style>
 
+    <style name="round_image_8" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
     <style name="round_image_10" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10dp</item>
     </style>
+
+
+    <style name="round_image_15" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">15dp</item>
+    </style>
+
 
     <style name="round_image_20" parent="">
         <item name="cornerFamily">rounded</item>
