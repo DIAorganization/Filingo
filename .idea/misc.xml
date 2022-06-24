@@ -8,6 +8,8 @@
         <entry key="..\:/Users/dubov/AndroidStudioProjects/Filingo/app/src/main/res/layout/finish_test.xml" value="0.22" />
         <entry key="..\:/Users/dubov/AndroidStudioProjects/Filingo/app/src/main/res/layout/letter_chooser_item.xml" value="0.209375" />
         <entry key="..\:/Users/dubov/AndroidStudioProjects/Filingo/app/src/main/res/layout/main_frame_info.xml" value="0.209375" />
+        <entry key="..\:/Users/dubov/AndroidStudioProjects/Filingo/app/src/main/res/layout/start_app_layout.xml" value="0.10182370820668693" />
+        <entry key="..\:/Users/dubov/AndroidStudioProjects/Filingo/app/src/main/res/layout/swap_img_from_left.xml" value="0.10182370820668693" />
         <entry key="..\:/Users/dubov/AndroidStudioProjects/Filingo/app/src/main/res/layout/test_fragment.xml" value="0.22" />
         <entry key="..\:/Users/dubov/AndroidStudioProjects/Filingo/app/src/main/res/layout/topic_chooser_item.xml" value="0.209375" />
         <entry key="..\:/android/Filingo/app/src/main/res/drawable/round_outline_background_info.xml" value="0.2705" />
@@ -18,5 +20,5 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="16" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="16" project-jdk-type="JavaSDK" />
 </project>

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -173,8 +172,8 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
 
             @Override
             public void onClick(View arg0) {
-                Animation hideImg = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.hide_img);
-                Animation showImg = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.show_img);
+                Animation hideImg = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.swap_img_to_left);
+                Animation showImg = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.show_img_from_right);
 /*
                 if (img.getVisibility() == View.GONE) {
                     img.setVisibility(View.VISIBLE);
@@ -215,6 +214,49 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
             });
 
 
+    }
+
+    private void launchAnimation(boolean toLeft, boolean isFull) {
+        ShapeableImageView img = findViewById(R.id.word_img);
+        Animation swapImgToLeft = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.swap_img_to_left);
+        Animation swapImgToRight = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.swap_img_to_right);
+        Animation swapImgFromLeft = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.swap_img_from_left);
+        Animation swapImgFromRight = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.show_img_from_right);
+
+        swapImgToLeft.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //img.setImageResource(R.drawable.hardware_icn);
+                if(isFull) img.startAnimation(swapImgFromRight);
+            }
+
+        });
+
+        swapImgToRight.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //img.setImageResource(R.drawable.hardware_icn);
+                if(isFull) img.startAnimation(swapImgFromLeft);
+            }
+
+        });
+
+        if(toLeft) img.startAnimation(swapImgToLeft);
+        else img.startAnimation(swapImgToRight);
     }
 
     private void setTestResultView() {
@@ -502,6 +544,8 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         knowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(demonstrationWords.size()>1)
+                    launchAnimation(true, true);
                 demonstrationWords.get(0).memoryFactor+=50;
                 demonstrationWords.remove(0);
                 if(demonstrationWords.size()>0) {
@@ -517,6 +561,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         learnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(demonstrationWords.size()>1 && currentTestWords.size()<3) {
+                    launchAnimation(false, true);
+                }
                 currentTestWords.add(demonstrationWords.get(0));
                 demonstrationWords.remove(0);
                 if(currentTestWords.size()>3) {
@@ -612,6 +659,14 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(numberOfTestToEndTesting>0) {
+                    int nextTestType = testKeys.get(numberOfTestToEndTesting-1)%3;
+                    if(nextTestType!=2) {
+                        launchAnimation(true, true);
+                    } else {
+                        launchAnimation(true, false);
+                    }
+                }
                 String answerText = "";
                 switch (testType) {
                     case 0:
