@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.start_app_layout);
-        setTensesChoseView();
+        setContentView(R.layout.test_fragment);
+        //setTensesChoseView();
         /*
 
         generateFakeDBTopicWords(40);
