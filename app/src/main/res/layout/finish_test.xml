@@ -48,8 +48,8 @@
 
     <TextView
         android:id="@+id/finish_test_progress_text"
-        android:layout_width="149dp"
-        android:layout_height="27dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:includeFontPadding="false"
         android:letterSpacing="0.1"
@@ -108,13 +108,12 @@
         app:layout_constraintEnd_toStartOf="@+id/bottom_menu_vertical_right_guideline" />
 
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom_menu_vertical_left_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.03"/>
+        app:layout_constraintGuide_percent="0.0" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom_menu_vertical_right_guideline"
