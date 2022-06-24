@@ -6,12 +6,13 @@
     android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/background_2"
+        app:srcCompat="@drawable/background_4"
         tools:layout_editor_absoluteX="-52dp"
         tools:layout_editor_absoluteY="0dp" />
 
@@ -32,11 +33,11 @@
         app:layout_constraintTop_toTopOf="@+id/topic_name_guideline" />
 
 
+
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_panel_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:shapeAppearanceOverlay="@style/round_image_10"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/card_background_horizontal_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_background_vertical_right_guideline"
@@ -44,7 +45,9 @@
         app:layout_constraintStart_toStartOf="@+id/card_background_vertical_left_guideline"
         app:layout_constraintTop_toTopOf="@+id/card_background_horizontal_top_guideline"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/background_1" />
+        app:shapeAppearanceOverlay="@style/round_image_10"
+        app:srcCompat="@drawable/background_2_1" />
+
 
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -53,7 +56,7 @@
         android:layout_height="0dp"
         app:shapeAppearanceOverlay="@style/round_image_5"
         android:scaleType="centerCrop"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/card_img_background_horizontal_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_img_background_vertical_right_guideline"
         app:layout_constraintStart_toStartOf="@+id/card_img_background_vertical_left_guideline"
@@ -183,23 +186,23 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/heart_icn" />
 
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/next_button"
-        android:layout_width="102dp"
-        android:layout_height="67dp"
+        android:layout_width="92dp"
+        android:layout_height="64dp"
         android:layout_gravity="center_vertical"
         android:background="@drawable/ic_button_next_background"
         android:fontFamily="sans-serif-medium"
         android:text="Next"
-        android:visibility="gone"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/heart_icn_horizontal_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_img_background_vertical_right_guideline"
-        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/card_img_background_vertical_left_guideline" />
-
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/word_audio_img_button"
@@ -221,7 +224,7 @@
         android:id="@+id/letter_chooser"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/letter_chooser_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_img_background_vertical_right_guideline"
         app:layout_constraintHorizontal_bias="0.512"
@@ -262,7 +265,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/answer_button_vertical_right_guideline"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/answer_button_vertical_left_guideline"
@@ -339,7 +342,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/answer_button_top_2"
         app:layout_constraintEnd_toStartOf="@+id/answer_button_vertical_right_guideline"
         app:layout_constraintHorizontal_bias="0.0"
@@ -358,7 +361,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/answer_button_top_3"
         app:layout_constraintEnd_toStartOf="@+id/answer_button_vertical_right_guideline"
         app:layout_constraintHorizontal_bias="0.0"
@@ -377,7 +380,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/answer_button_top_4"
         app:layout_constraintEnd_toStartOf="@+id/answer_button_vertical_right_guideline"
         app:layout_constraintHorizontal_bias="0.0"
@@ -397,7 +400,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/test_word_translate"
         app:layout_constraintEnd_toStartOf="@+id/answer_button_vertical_right_guideline"
         app:layout_constraintHorizontal_bias="0.0"
@@ -414,7 +417,7 @@
         android:text="Mouse"
         android:textColor="@color/white"
         android:textSize="22sp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/card_background_horizontal_bottom_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.1"
@@ -549,5 +552,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.80"/>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

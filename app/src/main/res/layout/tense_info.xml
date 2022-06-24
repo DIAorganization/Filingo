@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/background_4"
+        tools:layout_editor_absoluteX="-38dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/top_info_background"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@+id/right_menu_vertical_right_guideline"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="@+id/left_menu_vertical_left_guideline"
+        app:layout_constraintTop_toTopOf="@+id/top_info_horizontal_top_guideline"
+        app:shapeAppearanceOverlay="@style/round_image_10"
+        app:srcCompat="@drawable/background_3" />
+
+
+    <TextView
+        android:id="@+id/top_tense_name"
+        android:layout_width="154dp"
+        android:layout_height="45dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_vertical|center_horizontal"
+        android:includeFontPadding="false"
+        android:letterSpacing="0.1"
+        android:text="Tenses Info"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/top_info_background"
+        app:layout_constraintEnd_toStartOf="@+id/right_menu_vertical_right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_menu_vertical_left_guideline"
+        app:layout_constraintTop_toTopOf="@+id/top_info_background" />
+
+
+    <TextView
+        android:id="@+id/info_tense"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="start"
+        android:includeFontPadding="false"
+        android:letterSpacing="0.1"
+        android:text="Tenses Info"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/tenses_info_list_horizontal_bottom_guideline"
+        app:layout_constraintEnd_toStartOf="@+id/right_tense_list_vertical_right_guideline"
+        app:layout_constraintHorizontal_bias="0.074"
+        app:layout_constraintStart_toStartOf="@+id/left_tense_list_vertical_left_guideline"
+        app:layout_constraintTop_toTopOf="@+id/tenses_info_list_horizontal_top_guideline"
+        app:layout_constraintVertical_bias="0.035" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_menu_vertical_left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.03"/>
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_tense_list_vertical_right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.90"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_tense_list_vertical_left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_menu_vertical_right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.97"/>
+
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/top_info_horizontal_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.03"/>
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/tenses_info_list_horizontal_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15"/>
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/tenses_info_list_horizontal_bottom_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

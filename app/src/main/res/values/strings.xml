@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Filingo</string>
+    <string name="logo_text">FILINGO</string>
+    <string name="logo_bottom_text">Gives You Freedom</string>
 </resources>

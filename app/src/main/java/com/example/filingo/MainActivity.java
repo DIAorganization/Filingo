@@ -1,22 +1,26 @@
 package com.example.filingo;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.filingo.adapters.*;
 import com.example.filingo.database.Word;
+import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements LetterAdapter.OnLetterClicked , TopicAdapter.OnTopicClicked {
+public class MainActivity extends AppCompatActivity implements LetterAdapter.OnLetterClicked , TopicAdapter.OnTopicClicked , TenseAdapter.OnTenseClicked {
 
     private static final int POINTS_FOR_TESTING = 5; // every word in test have this
     private static final int POINTS_FOR_RIGHT_ANSWER = 5; // for each right answer
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     private static final int POINTS_FOR_PERFECT_TEST = 5; // no life losing test
 
 
+    private String currentTestTopicName = "";
     private static int numberOfTestToEndTesting = 0; // need to count number of test in testing
     private static int numberOfRightAnswers = 0;  // need to count right answers in testing
     private static int chosenAnswer = -1; // to track chosen answer in test
@@ -75,15 +80,28 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
 
 
     RecyclerView topicRecycler; // topic_chooser;
+    RecyclerView tensesRecycler; // tenses_chooser;
+
     LetterAdapter letterAdapter;
     TopicAdapter topicAdapter;
+    TenseAdapter tenseAdapter;
+
+    // Results screen elements
+    Button againButton;
+    Button exitTestButton;
+    TextView testProgressTextView;
+    ProgressBar testProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
-        generateFakeDBTopicWords(40);
-        setTopicChoseView();
+        setStartWindow();
+        //setTestAnimationWorking();
+        //setTensesChoseView();
+
+        //generateFakeDBTopicWords(40);
+        //setTopicChoseView();
     }
 
     private void resetLives() {
@@ -146,6 +164,183 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
             default:
 
         }
+    }
+
+    private void setTestAnimationWorking(){
+        setContentView(R.layout.test_fragment);
+
+        ShapeableImageView img = findViewById(R.id.word_img);
+        Button nextButton = findViewById(R.id.next_button);
+
+        nextButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View arg0) {
+                Animation hideImg = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.swap_img_to_left);
+                Animation showImg = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.show_img_from_right);
+/*
+                if (img.getVisibility() == View.GONE) {
+                    img.setVisibility(View.VISIBLE);
+                }else{
+
+                }
+*/
+
+
+                hideImg.setAnimationListener(new Animation.AnimationListener() {
+
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        img.setImageResource(R.drawable.hardware_icn);
+                        img.startAnimation(showImg);
+                    }
+
+                });
+                img.startAnimation(hideImg);
+               // img.setVisibility(View.GONE);
+
+               // img.setImageResource(R.drawable.hardware_icn);
+            //    img.setVisibility(View.VISIBLE);
+                //img.startAnimation(showImg);
+            }
+            });
+
+
+    }
+
+    private void launchAnimation(boolean toLeft, boolean isFull) {
+        ShapeableImageView img = findViewById(R.id.word_img);
+        Animation swapImgToLeft = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.swap_img_to_left);
+        Animation swapImgToRight = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.swap_img_to_right);
+        Animation swapImgFromLeft = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.swap_img_from_left);
+        Animation swapImgFromRight = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.show_img_from_right);
+
+        swapImgToLeft.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //img.setImageResource(R.drawable.hardware_icn);
+                if(isFull) img.startAnimation(swapImgFromRight);
+            }
+
+        });
+
+        swapImgToRight.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //img.setImageResource(R.drawable.hardware_icn);
+                if(isFull) img.startAnimation(swapImgFromLeft);
+            }
+
+        });
+
+        if(toLeft) img.startAnimation(swapImgToLeft);
+        else img.startAnimation(swapImgToRight);
+    }
+
+    private void setTestResultView() {
+        setContentView(R.layout.finish_test);
+        againButton=findViewById(R.id.finish_test_again_button);
+        exitTestButton=findViewById(R.id.finish_test_exit_button);
+        testProgressTextView=findViewById(R.id.finish_test_progress_text);
+        testProgressBar=findViewById(R.id.finish_test_progressBar);
+
+        againButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchTesting(currentTestTopicName);
+            }
+        });
+
+        exitTestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setTopicChoseView();
+            }
+        });
+
+        testProgressTextView.setText("Test has been PASSED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWords.size()*3));
+        if(lives<=0)
+            testProgressTextView.setText("Test has been FAILED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWords.size()*3));
+        testProgressBar.setProgress(numberOfRightAnswers/(currentTestWords.size()*3));
+    }
+
+    private void setStartWindow(){
+        setContentView(R.layout.start_app_layout);
+        ShapeableImageView userImg = findViewById(R.id.start_app_user_icn);
+
+        userImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImagePicker.with(MainActivity.this)
+                        .crop()	    			//Crop image(Optional), Check Customization for more option
+                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                        .start();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        ShapeableImageView userImg = findViewById(R.id.start_app_user_icn);
+        Uri uri = data.getData();
+        userImg.setImageURI(uri);
+    }
+
+    private void setTensesChoseView() {
+        setContentView(R.layout.tenses_info_layout);
+        tensesRecycler = findViewById(R.id.tenses_chooser);
+
+        List<String> listOfTenses = new ArrayList<>();
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+        listOfTenses.add("Present Simple");
+
+
+
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        tensesRecycler.setLayoutManager(layoutManager);
+        tenseAdapter = new TenseAdapter(this, listOfTenses, MainActivity.this);
+        tensesRecycler.setAdapter(tenseAdapter);
     }
 
     private void setTopicChoseView() {
@@ -299,6 +494,11 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     }
 
     @Override
+    public void OnTenseClicked(int pos) {
+
+    }
+
+    @Override
     public void OnLetterClicked(int pos) {
         if(!letterAdapter.lettersAreChosen.get(pos)) { // we can't add same letter twice
             wordChosenByLetters+=letterAdapter.letterList.get(pos);
@@ -312,6 +512,7 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     }
 
     private void launchTesting(String testingTopic) {
+        currentTestTopicName=testingTopic;
         setTestFragment();
         testTopicName.setText(testingTopic);
         currentTestWords.clear();
@@ -373,6 +574,8 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         knowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(demonstrationWords.size()>1)
+                    launchAnimation(true, true);
                 demonstrationWords.get(0).memoryFactor+=50;
                 demonstrationWords.remove(0);
                 if(demonstrationWords.size()>0) {
@@ -388,6 +591,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         learnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(demonstrationWords.size()>1 && currentTestWords.size()<3) {
+                    launchAnimation(false, true);
+                }
                 currentTestWords.add(demonstrationWords.get(0));
                 demonstrationWords.remove(0);
                 if(currentTestWords.size()>3) {
@@ -425,16 +631,21 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         Word currentWord = currentTestWords.get(testKey/4);
 
         // Additional words for testing options(till we have full database)
-        Word word2 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        while(word2==currentWord)
-            word2 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        Word word3 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        while(word3==currentWord || word3 ==word2)
-            word3 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        Word word4 = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        while(word4==currentWord || word4 ==word2 || word4==word3)
-            word4 =allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
-        //
+        ArrayList<Word> testOptions = new ArrayList<>();
+        testOptions.add(currentWord);
+
+        for(int i=0; i<3; i++) {  // Add incorrect options
+            Word optionWord = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
+            for(int j=0; j<testOptions.size(); j++) {
+                if(optionWord.id == testOptions.get(j).id) {
+                    optionWord = allTopicWords.get((new Random()).nextInt(allTopicWords.size()));
+                    j=-1; // start loop again
+                    continue;
+                }
+            }
+            testOptions.add(optionWord);
+        }
+        Collections.shuffle(testOptions);
 
 
 
@@ -450,25 +661,25 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
             case 1:
                 TranslateTestFrameUaEn();
                 wordTranslateOnTestScreen.setText(currentWord.ukrainian.get(0));
-                answerButtonBottomFirst.setText(currentWord.english);
+                answerButtonBottomFirst.setText(testOptions.get(0).english);
                 answerButtonBottomFirst.setOnClickListener(x -> {setChosenAnswer(0);});
-                answerButtonBottomSecond.setText(word2.english);
+                answerButtonBottomSecond.setText(testOptions.get(1).english);
                 answerButtonBottomSecond.setOnClickListener(x -> setChosenAnswer(1));
-                answerButtonBottomThird.setText(word4.english);
+                answerButtonBottomThird.setText(testOptions.get(2).english);
                 answerButtonBottomThird.setOnClickListener(x -> setChosenAnswer(2));
-                answerButtonBottomFourth.setText(word3.english);
+                answerButtonBottomFourth.setText(testOptions.get(3).english);
                 answerButtonBottomFourth.setOnClickListener(x -> setChosenAnswer(3));
                 break;
             case 2:
                 TranslateTestFrameEnUa();
                 wordValueOnTestScreen.setText(currentWord.english);
-                answerButtonTopFirst.setText(word3.ukrainian.get(0));
+                answerButtonTopFirst.setText(testOptions.get(0).ukrainian.get(0));
                 answerButtonTopFirst.setOnClickListener(x -> setChosenAnswer(0));
-                answerButtonTopSecond.setText(word4.ukrainian.get(0));
+                answerButtonTopSecond.setText(testOptions.get(1).ukrainian.get(0));
                 answerButtonTopSecond.setOnClickListener(x -> setChosenAnswer(1));
-                answerButtonTopThird.setText(currentWord.ukrainian.get(0));
+                answerButtonTopThird.setText(testOptions.get(2).ukrainian.get(0));
                 answerButtonTopThird.setOnClickListener(x -> setChosenAnswer(2));
-                answerButtonTopFourth.setText(word2.ukrainian.get(0));
+                answerButtonTopFourth.setText(testOptions.get(3).ukrainian.get(0));
                 answerButtonTopFourth.setOnClickListener(x -> setChosenAnswer(3));
                 break;
             default:
@@ -478,6 +689,14 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(numberOfTestToEndTesting>0) {
+                    int nextTestType = testKeys.get(numberOfTestToEndTesting-1)%3;
+                    if(nextTestType!=2) {
+                        launchAnimation(true, true);
+                    } else {
+                        launchAnimation(true, false);
+                    }
+                }
                 String answerText = "";
                 switch (testType) {
                     case 0:
@@ -487,7 +706,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                             currentWord.memoryFactor+=POINTS_FOR_RIGHT_ANSWER;
                         } else {
                             loseLife();
-                            if(lives==0) setTopicChoseView(); // test failed, back to menu
+                            if(lives==0) {
+                                setTestResultView(); // test failed, back to menu
+                            }
                         }
                         break;
                     case 1:
@@ -510,8 +731,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                             currentWord.memoryFactor+=POINTS_FOR_RIGHT_ANSWER;
                         } else {
                             loseLife();
-                            if(lives==0) setTopicChoseView(); // test failed, back to menu
-                        }
+                            if(lives==0) {
+                                setTestResultView(); // test failed, back to menu
+                            }                        }
                         break;
                     case 2:
                         switch (chosenAnswer) {
@@ -535,8 +757,9 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                                 break;
                             } else if(i==currentWord.ukrainian.size()-1) { // wrong answer
                                 loseLife();
-                                if(lives==0) setTopicChoseView(); // test failed, back to menu
-                            }
+                                if(lives==0) {
+                                    setTestResultView(); // test failed, back to menu
+                                }                            }
                         }
                         break;
                     default:
@@ -554,146 +777,13 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
                             word.memoryFactor+=POINTS_FOR_PERFECT_TEST;
                     }
                     Log.d("TAG", "Right Answers: "+numberOfRightAnswers);
-                    setTopicChoseView();
+                    setTestResultView();
                 }
             }
         });
     }
 }
 
-class LetterAdapter extends RecyclerView.Adapter<LetterAdapter.LetterViewHolder> {
-
-    Context context;
-    List<Character> letterList;
-    List<Boolean> lettersAreChosen;
-    View lastSelected;
-    private OnLetterClicked mListener;
-
-    public LetterAdapter(Context context, List<Character> letterList , OnLetterClicked mListener) {
-        this.context = context;
-        this.letterList = letterList;
-        this.lettersAreChosen = new ArrayList<>();
-        for(int i=0; i<letterList.size(); i++) { // fill with 'false' value
-            lettersAreChosen.add(false);
-        }
-        this.mListener = mListener;
-    }
-
-    @NonNull
-    @Override
-    public LetterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.letter_chooser_item, parent, false);
-        return new LetterViewHolder(view);
-    }
 
 
 
-    @Override
-    public void onBindViewHolder(@NonNull final LetterViewHolder holder, int position) {
-        holder.letter.setText( letterList.get(position) + "");
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int pos = holder.getAdapterPosition();
-             //   if(lastSelected != null)
-               //     ((CardView) lastSelected.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.backgroud_for_buttons));
-                ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.light_gray));
-
-                mListener.OnLetterClicked(pos);
-                lastSelected = holder.itemView;
-            }
-        });
-
-    }
-
-    public interface OnLetterClicked {
-        void OnLetterClicked(int pos);
-    }
-
-    @Override
-    public int getItemCount() {
-        return letterList.size();
-    }
-
-
-    public static final class LetterViewHolder extends RecyclerView.ViewHolder{
-        TextView letter;
-        public LetterViewHolder(@NonNull View itemView) {
-            super(itemView);
-            letter = itemView.findViewById(R.id.letter);
-        }
-    }
-
-}
-
-class Topic{
-
-    public Topic(Integer topicIcnUrl , String topicName){
-        this.topicIcnUrl = topicIcnUrl;
-        this.topicName = topicName;
-    }
-
-    public Integer topicIcnUrl;
-    public String topicName;
-    public Double topicProgress = 0.;//???
-}
-
-class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHolder> {
-
-    Context context;
-    List<Topic> topicList;
-    private OnTopicClicked mListener;
-
-    public TopicAdapter(Context context, List<Topic> topicList , OnTopicClicked mListener) {
-        this.context = context;
-        this.topicList = topicList;
-        this.mListener = mListener;
-    }
-
-    @NonNull
-    @Override
-    public TopicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.topic_chooser_item, parent, false);
-        return new TopicViewHolder(view);
-    }
-
-
-
-    @Override
-    public void onBindViewHolder(@NonNull final TopicViewHolder holder, int position) {
-        holder.topicIcn.setImageResource(topicList.get(position).topicIcnUrl);
-        holder.topicName.setText( topicList.get(position).topicName);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int pos = holder.getAdapterPosition();
-                mListener.OnTopicClicked(topicList.get(pos));
-            }
-        });
-
-    }
-
-    public interface OnTopicClicked {
-        void OnTopicClicked(Topic topic);
-    }
-
-    @Override
-    public int getItemCount() {
-        return topicList.size();
-    }
-
-
-    public static final class TopicViewHolder extends RecyclerView.ViewHolder{
-        ImageView topicIcn;
-        TextView topicName;
-        Double topicProgress;//???
-
-        public TopicViewHolder(@NonNull View itemView) {
-            super(itemView);
-            topicIcn = itemView.findViewById(R.id.topic_icn);
-            topicName  = itemView.findViewById(R.id.topic_name);
-        }
-    }
-
-}

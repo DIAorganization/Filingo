@@ -20,5 +20,20 @@
         <item name="cornerSize">30dp</item>
     </style>
 
+    <style name="round_image_40" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">40dp</item>
+    </style>
+
+    <style name="round_image_45" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">45dp</item>
+    </style>
+
+    <style name="round_image_50" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50dp</item>
+    </style>
+
 </resources>
 
