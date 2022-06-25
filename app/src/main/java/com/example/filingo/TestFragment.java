@@ -88,6 +88,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     ShapeableImageView bonusIcon;
 
+    TextView numberOfTestView;
+
     // Results screen elements
     Button againButton;
     Button exitTestButton;
@@ -288,6 +290,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         // Bonus Icon
         bonusIcon = rootView.findViewById(R.id.bonus_icn_test);
 
+        numberOfTestView=rootView.findViewById(R.id.test_fragment_test_number);
+
         nextButton = rootView.findViewById(R.id.next_button);
         wordAudioImgButton = rootView.findViewById(R.id.word_audio_img_button);
         letterRecycler = rootView.findViewById(R.id.letter_chooser);
@@ -305,6 +309,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     public void ChooseWord(){
         wordImg.setVisibility(View.VISIBLE);
+        numberOfTestView.setVisibility(View.GONE);
         wordValueOnChooseScreen.setVisibility(View.VISIBLE);
         wordTranslateOnChooseScreen.setVisibility(View.VISIBLE);
         knowButton.setVisibility(View.VISIBLE);
@@ -330,6 +335,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     public void AudioTestFrameEnEn(){
         wordImg.setVisibility(View.VISIBLE);
+        numberOfTestView.setVisibility(View.VISIBLE);
         wordValueOnChooseScreen.setVisibility(View.GONE);
         wordTranslateOnChooseScreen.setVisibility(View.GONE);
         knowButton.setVisibility(View.GONE);
@@ -357,6 +363,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     public void TranslateTestFrameUaEn(){
         wordImg.setVisibility(View.VISIBLE);
+        numberOfTestView.setVisibility(View.VISIBLE);
         wordValueOnChooseScreen.setVisibility(View.GONE);
         wordTranslateOnChooseScreen.setVisibility(View.GONE);
         knowButton.setVisibility(View.GONE);
@@ -383,6 +390,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     public void TranslateTestFrameEnUa(){
         wordImg.setVisibility(View.GONE);
+        numberOfTestView.setVisibility(View.VISIBLE);
         wordValueOnChooseScreen.setVisibility(View.GONE);
         wordTranslateOnChooseScreen.setVisibility(View.GONE);
         knowButton.setVisibility(View.GONE);
@@ -535,10 +543,10 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     private void launchTest() {
         isDecisionMade = false;
         numberOfTestToEndTesting--;
+        numberOfTestView.setText((currentTestWords.size()*3-numberOfTestToEndTesting)+"/"+(currentTestWords.size()*3));
         if(numberOfTestToEndTesting < 0) return; // stop if we finish all tests
         int testKey = testKeys.get(numberOfTestToEndTesting);
 
-        Log.d("TAG", "Test "+(currentTestWords.size()*3-numberOfTestToEndTesting)+"/"+(currentTestWords.size()*3));
         Word currentWord = currentTestWords.get(testKey/4);
 
         // Additional words for testing options(till we have full database)
