@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -55,6 +56,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     private static ArrayList<Integer> testKeys; // needed for test generation in random order
     private static boolean isDecisionMade = false; // to check if we go to the next test
+    private static String currentWordEnglish="";
 
     private static ArrayList<Word> allTopicWordsFakeDBData; // delete after DB will be full working
 
@@ -426,6 +428,15 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         for(Boolean l: letterAdapter.lettersAreChosen) {
             if(!l) isDecisionMade=false;
         }
+        if(isDecisionMade) {
+            for (int childCount = letterRecycler.getChildCount(), i = 0; i < childCount; ++i) {
+                final RecyclerView.ViewHolder holder = letterRecycler.getChildViewHolder(letterRecycler.getChildAt(i));
+                if(wordChosenByLetters.equals(currentWordEnglish))
+                    holder.itemView.findViewById(R.id.card_view_of_letter_item).setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                else
+                    holder.itemView.findViewById(R.id.card_view_of_letter_item).setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+            }
+        }
     }
 
 
@@ -548,6 +559,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         int testKey = testKeys.get(numberOfTestToEndTesting);
 
         Word currentWord = currentTestWords.get(testKey/4);
+        currentWordEnglish = currentWord.english;
 
         // Additional words for testing options(till we have full database)
         ArrayList<Word> testOptions = new ArrayList<>();
@@ -596,7 +608,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 answerButtonTopFirst.setOnClickListener(x -> {
                     boolean isRight = false;
                     for(int i=0; i < currentWord.ukrainian.size(); i++) {
-                        if(currentWord.ukrainian.get(i).equals(answerButtonTopFirst)) {
+                        if(currentWord.ukrainian.get(i).equals(answerButtonTopFirst.getText().toString())) {
                             isRight=true;
                             break;
                         }
@@ -607,7 +619,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 answerButtonTopSecond.setOnClickListener(x -> {
                     boolean isRight = false;
                     for(int i=0; i < currentWord.ukrainian.size(); i++) {
-                        if(currentWord.ukrainian.get(i).equals(answerButtonTopSecond)) {
+                        if(currentWord.ukrainian.get(i).equals(answerButtonTopSecond.getText().toString())) {
                             isRight=true;
                             break;
                         }
@@ -618,7 +630,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 answerButtonTopThird.setOnClickListener(x -> {
                     boolean isRight = false;
                     for(int i=0; i < currentWord.ukrainian.size(); i++) {
-                        if(currentWord.ukrainian.get(i).equals(answerButtonTopThird)) {
+                        if(currentWord.ukrainian.get(i).equals(answerButtonTopThird.getText().toString())) {
                             isRight=true;
                             break;
                         }
@@ -629,7 +641,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 answerButtonTopFourth.setOnClickListener(x -> {
                     boolean isRight = false;
                     for(int i=0; i < currentWord.ukrainian.size(); i++) {
-                        if(currentWord.ukrainian.get(i).equals(answerButtonTopFourth)) {
+                        if(currentWord.ukrainian.get(i).equals(answerButtonTopFourth.getText().toString())) {
                             isRight=true;
                             break;
                         }
