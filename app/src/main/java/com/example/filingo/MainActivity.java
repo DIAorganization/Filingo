@@ -2,6 +2,7 @@ package com.example.filingo;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,15 +68,15 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     RecyclerView letterRecycler; // letter_chooser;
     TextView wordTranslateOnTestScreen; // test_word_translate;
 
-    Button answerButtonBottomFirst; // answer_button_bottom_1;
-    Button answerButtonBottomSecond; // answer_button_bottom_2;
-    Button answerButtonBottomThird; // answer_button_bottom_3;
-    Button answerButtonBottomFourth; // answer_button_bottom_4;
+    AppCompatButton answerButtonBottomFirst; // answer_button_bottom_1;
+    AppCompatButton answerButtonBottomSecond; // answer_button_bottom_2;
+    AppCompatButton answerButtonBottomThird; // answer_button_bottom_3;
+    AppCompatButton answerButtonBottomFourth; // answer_button_bottom_4;
 
-    Button answerButtonTopFirst; // answer_button_top_1;
-    Button answerButtonTopSecond; // answer_button_top_2;
-    Button answerButtonTopThird; // answer_button_top_3;
-    Button answerButtonTopFourth; // answer_button_top_4;
+    AppCompatButton answerButtonTopFirst; // answer_button_top_1;
+    AppCompatButton answerButtonTopSecond; // answer_button_top_2;
+    AppCompatButton answerButtonTopThird; // answer_button_top_3;
+    AppCompatButton answerButtonTopFourth; // answer_button_top_4;
     TextView wordValueOnTestScreen; // test_word_value;
 
 
@@ -96,10 +97,13 @@ public class MainActivity extends AppCompatActivity implements LetterAdapter.OnL
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
-        setStartWindow();
+
+        setContentView(R.layout.test_fragment);
+        answerButtonBottomFirst = findViewById(R.id.answer_button_bottom_1);
+        answerButtonBottomFirst.setBackground(getDrawable(R.drawable.wrong_test_button_background));
+        // setStartWindow();
         //setTestAnimationWorking();
         //setTensesChoseView();
-
         //generateFakeDBTopicWords(40);
         //setTopicChoseView();
     }
