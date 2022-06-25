@@ -86,6 +86,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     LetterAdapter letterAdapter;
 
+    ShapeableImageView bonusIcon;
+
     // Results screen elements
     Button againButton;
     Button exitTestButton;
@@ -250,6 +252,9 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         heartSecond.setVisibility(View.VISIBLE);
         heartThird.setVisibility(View.VISIBLE);
 
+        // Bonus Icon
+        bonusIcon = rootView.findViewById(R.id.bonus_icn_test);
+
         nextButton = rootView.findViewById(R.id.next_button);
         wordAudioImgButton = rootView.findViewById(R.id.word_audio_img_button);
         letterRecycler = rootView.findViewById(R.id.letter_chooser);
@@ -274,6 +279,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         heartFirst.setVisibility(View.GONE);
         heartSecond.setVisibility(View.GONE);
         heartThird.setVisibility(View.GONE);
+        bonusIcon.setVisibility(View.GONE);
         nextButton.setVisibility(View.GONE);
         wordAudioImgButton.setVisibility(View.GONE);
         letterRecycler.setVisibility(View.GONE);
@@ -299,6 +305,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         //heartFirst.setVisibility(View.VISIBLE);
         //heartSecond.setVisibility(View.VISIBLE);
         //heartThird.setVisibility(View.VISIBLE);
+        bonusIcon.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         wordAudioImgButton.setVisibility(View.VISIBLE);
         letterRecycler.setVisibility(View.VISIBLE);
@@ -325,6 +332,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         //heartFirst.setVisibility(View.VISIBLE);
         //heartSecond.setVisibility(View.VISIBLE);
         //heartThird.setVisibility(View.VISIBLE);
+        bonusIcon.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         wordAudioImgButton.setVisibility(View.GONE);
         letterRecycler.setVisibility(View.GONE);
@@ -350,6 +358,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         //heartFirst.setVisibility(View.VISIBLE);
         //heartSecond.setVisibility(View.VISIBLE);
         //heartThird.setVisibility(View.VISIBLE);
+        bonusIcon.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         wordAudioImgButton.setVisibility(View.VISIBLE);
         letterRecycler.setVisibility(View.GONE);
