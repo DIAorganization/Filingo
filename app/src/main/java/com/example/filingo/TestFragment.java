@@ -154,9 +154,9 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         AudioTestFrameEnEn();
     }
 
-    private void setChosenAnswer(int answer) {
-        if(answer>0) isDecisionMade=true;
-        chosenAnswer=answer;
+    private void setChosenAnswer(int answer, boolean isCorrect) {
+        if(isDecisionMade) return; // Can't reselect answer
+
         // reset buttons colors
         answerButtonTopFirst.setBackground((Drawable) ((Context)(((MainActivity)getActivity()))).getResources().getDrawable(R.drawable.test_button_background));
         answerButtonBottomFirst.setBackground((Drawable) ((Context)(((MainActivity)getActivity()))).getResources().getDrawable(R.drawable.test_button_background));
@@ -167,22 +167,55 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         answerButtonTopFourth.setBackground((Drawable) ((Context)(((MainActivity)getActivity()))).getResources().getDrawable(R.drawable.test_button_background));
         answerButtonBottomFourth.setBackground((Drawable) ((Context)(((MainActivity)getActivity()))).getResources().getDrawable(R.drawable.test_button_background));
 
+        if(answer>=0) {
+            isDecisionMade=true;
+        }
+        chosenAnswer=answer;
+
         switch(chosenAnswer) {
             case 0:
-                answerButtonTopFirst.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                answerButtonBottomFirst.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                if(chosenAnswer>=0) {
+                    if (isCorrect) {
+                        answerButtonTopFirst.setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                        answerButtonBottomFirst.setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                    } else {
+                        answerButtonTopFirst.setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                        answerButtonBottomFirst.setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                    }
+                }
                 break;
             case 1:
-                answerButtonTopSecond.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                answerButtonBottomSecond.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                if(chosenAnswer>=0) {
+                    if (isCorrect) {
+                        answerButtonTopSecond.setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                        answerButtonBottomSecond.setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                    } else {
+                        answerButtonTopSecond.setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                        answerButtonBottomSecond.setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                    }
+                }
                 break;
             case 2:
-                answerButtonTopThird.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                answerButtonBottomThird.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                if(chosenAnswer>=0) {
+                    if (isCorrect) {
+                        answerButtonTopThird.setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                        answerButtonBottomThird.setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                    } else {
+                        answerButtonTopThird.setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                        answerButtonBottomThird.setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                    }
+                }
                 break;
             case 3:
-                answerButtonTopFourth.setBackgroundColor(getResources().getColor(R.color.light_gray));
-                answerButtonBottomFourth.setBackgroundColor(getResources().getColor(R.color.light_gray));
+                if(chosenAnswer>=0) {
+                    if (isCorrect) {
+                        answerButtonTopFourth.setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                        answerButtonBottomFourth.setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                    } else {
+                        answerButtonTopFourth.setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                        answerButtonBottomFourth.setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                    }
+                }
                 break;
             default:
 
@@ -528,7 +561,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
 
         int testType = testKey%3; // test type
-        setChosenAnswer(-1);
+        setChosenAnswer(-1, true);
         wordChosenByLetters = "";
 
         switch (testType) {
@@ -540,25 +573,61 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 TranslateTestFrameUaEn();
                 wordTranslateOnTestScreen.setText(currentWord.ukrainian.get(0));
                 answerButtonBottomFirst.setText(testOptions.get(0).english);
-                answerButtonBottomFirst.setOnClickListener(x -> {setChosenAnswer(0);});
+                answerButtonBottomFirst.setOnClickListener(x -> setChosenAnswer(0, answerButtonBottomFirst.getText().equals(currentWord.english)));
                 answerButtonBottomSecond.setText(testOptions.get(1).english);
-                answerButtonBottomSecond.setOnClickListener(x -> setChosenAnswer(1));
+                answerButtonBottomSecond.setOnClickListener(x -> setChosenAnswer(1, answerButtonBottomSecond.getText().equals(currentWord.english)));
                 answerButtonBottomThird.setText(testOptions.get(2).english);
-                answerButtonBottomThird.setOnClickListener(x -> setChosenAnswer(2));
+                answerButtonBottomThird.setOnClickListener(x -> setChosenAnswer(2, answerButtonBottomThird.getText().equals(currentWord.english)));
                 answerButtonBottomFourth.setText(testOptions.get(3).english);
-                answerButtonBottomFourth.setOnClickListener(x -> setChosenAnswer(3));
+                answerButtonBottomFourth.setOnClickListener(x -> setChosenAnswer(3, answerButtonBottomFourth.getText().equals(currentWord.english)));
                 break;
             case 2:
                 TranslateTestFrameEnUa();
                 wordValueOnTestScreen.setText(currentWord.english);
                 answerButtonTopFirst.setText(testOptions.get(0).ukrainian.get(0));
-                answerButtonTopFirst.setOnClickListener(x -> setChosenAnswer(0));
+                answerButtonTopFirst.setOnClickListener(x -> {
+                    boolean isRight = false;
+                    for(int i=0; i < currentWord.ukrainian.size(); i++) {
+                        if(currentWord.ukrainian.get(i).equals(answerButtonTopFirst)) {
+                            isRight=true;
+                            break;
+                        }
+                    }
+                    setChosenAnswer(0, isRight);
+                });
                 answerButtonTopSecond.setText(testOptions.get(1).ukrainian.get(0));
-                answerButtonTopSecond.setOnClickListener(x -> setChosenAnswer(1));
+                answerButtonTopSecond.setOnClickListener(x -> {
+                    boolean isRight = false;
+                    for(int i=0; i < currentWord.ukrainian.size(); i++) {
+                        if(currentWord.ukrainian.get(i).equals(answerButtonTopSecond)) {
+                            isRight=true;
+                            break;
+                        }
+                    }
+                    setChosenAnswer(1, isRight);
+                });
                 answerButtonTopThird.setText(testOptions.get(2).ukrainian.get(0));
-                answerButtonTopThird.setOnClickListener(x -> setChosenAnswer(2));
+                answerButtonTopThird.setOnClickListener(x -> {
+                    boolean isRight = false;
+                    for(int i=0; i < currentWord.ukrainian.size(); i++) {
+                        if(currentWord.ukrainian.get(i).equals(answerButtonTopThird)) {
+                            isRight=true;
+                            break;
+                        }
+                    }
+                    setChosenAnswer(2, isRight);
+                });
                 answerButtonTopFourth.setText(testOptions.get(3).ukrainian.get(0));
-                answerButtonTopFourth.setOnClickListener(x -> setChosenAnswer(3));
+                answerButtonTopFourth.setOnClickListener(x -> {
+                    boolean isRight = false;
+                    for(int i=0; i < currentWord.ukrainian.size(); i++) {
+                        if(currentWord.ukrainian.get(i).equals(answerButtonTopFourth)) {
+                            isRight=true;
+                            break;
+                        }
+                    }
+                    setChosenAnswer(3, isRight);
+                });
                 break;
             default:
                 //
