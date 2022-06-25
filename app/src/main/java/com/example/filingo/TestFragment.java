@@ -54,7 +54,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     private static ArrayList<Word> currentTestWords = new ArrayList<>(); // words(up to 4) that are in the test now
 
     private static ArrayList<Integer> testKeys; // needed for test generation in random order
-
+    private static boolean isDecisionMade = false; // to check if we go to the next test
 
     private static ArrayList<Word> allTopicWordsFakeDBData; // delete after DB will be full working
 
@@ -153,6 +153,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     }
 
     private void setChosenAnswer(int answer) {
+        if(answer>0) isDecisionMade=true;
         chosenAnswer=answer;
         // reset buttons colors
         answerButtonTopFirst.setBackground((Drawable) ((Context)(((MainActivity)getActivity()))).getResources().getDrawable(R.drawable.test_button_background));
@@ -371,6 +372,10 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             wordChosenByLetters+=letterAdapter.letterList.get(pos);
             letterAdapter.lettersAreChosen.set(pos, true);
         }
+        isDecisionMade=true;
+        for(Boolean l: letterAdapter.lettersAreChosen) {
+            if(!l) isDecisionMade=false;
+        }
     }
 
 
@@ -486,6 +491,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     }
 
     private void launchTest() {
+        isDecisionMade = false;
         numberOfTestToEndTesting--;
         if(numberOfTestToEndTesting < 0) return; // stop if we finish all tests
         int testKey = testKeys.get(numberOfTestToEndTesting);
@@ -552,6 +558,13 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!isDecisionMade) {
+                    Log.d("TAG", "Chose some option to go further");
+                    return;
+                } else {
+                    Log.d("TAG", "gge some option to go further");
+
+                }
                 if(numberOfTestToEndTesting>0) {
                     int nextTestType = testKeys.get(numberOfTestToEndTesting-1)%3;
                     if(nextTestType!=2) {
