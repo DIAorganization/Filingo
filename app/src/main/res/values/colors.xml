@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="backgroud_for_buttons">#555353</color>
     <color name="light_gray">#D1D1D1</color>
+    <color name="wrong_answer">#C62F2F</color>
+    <color name="right_answer">#75AA5E</color>
 </resources>

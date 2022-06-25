@@ -33,7 +33,6 @@
         app:layout_constraintTop_toTopOf="@+id/topic_name_guideline" />
 
 
-
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/img_panel_background"
         android:layout_width="0dp"
@@ -41,13 +40,12 @@
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/card_background_horizontal_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_background_vertical_right_guideline"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/card_background_vertical_left_guideline"
         app:layout_constraintTop_toTopOf="@+id/card_background_horizontal_top_guideline"
         app:layout_constraintVertical_bias="0.0"
         app:shapeAppearanceOverlay="@style/round_image_10"
         app:srcCompat="@drawable/background_2_1" />
-
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/word_img"
@@ -102,6 +100,22 @@
         app:layout_constraintTop_toBottomOf="@+id/word_img"
         app:layout_constraintVertical_bias="0.713" />
 
+
+    <TextView
+        android:id="@+id/test_fragment_test_number"
+        android:layout_width="57dp"
+        android:layout_height="32dp"
+        android:fontFamily="sans-serif"
+        android:includeFontPadding="false"
+        android:letterSpacing="0.1"
+        android:text="4/12"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/card_background_vertical_right_guideline"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/answer_button_vertical_right_guideline"
+        app:layout_constraintTop_toTopOf="@+id/topic_name_guideline" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/choose_know_button"
@@ -216,7 +230,7 @@
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/heart_icn_horizontal_bottom_guideline"
         app:layout_constraintEnd_toStartOf="@+id/card_img_background_vertical_right_guideline"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="@+id/card_img_background_vertical_left_guideline" />
 
     <com.google.android.material.imageview.ShapeableImageView

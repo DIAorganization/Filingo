@@ -94,21 +94,21 @@
         app:layout_constraintTop_toBottomOf="@+id/start_app_icn_add_text" />
 
     <EditText
+        android:id="@+id/start_app_name_of_user"
         android:layout_width="163dp"
         android:layout_height="24dp"
         android:background="@drawable/edit_text_background"
         android:fontFamily="sans-serif-light"
+        android:inputType="text"
+        android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:maxLines="1"
-        android:inputType="text"
         app:layout_constraintEnd_toStartOf="@+id/edit_text_name_vertical_right_guideline"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="@+id/edit_text_name_vertical_left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/start_app_name_add_text" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/finish_test_exit_button"
+        android:id="@+id/start_app_go_button"
         android:layout_width="79dp"
         android:layout_height="53dp"
         android:layout_gravity="center_vertical"
