@@ -57,8 +57,10 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     private static ArrayList<Integer> testKeys; // needed for test generation in random order
     private static boolean isDecisionMade = false; // to check if we go to the next test
     private static String currentWordEnglish="";
+    private static boolean isUnskippableAnimationRunning = false;
 
     private static ArrayList<Word> allTopicWordsFakeDBData; // delete after DB will be full working
+
 
     TextView testTopicName; // topic_name;
     ImageView wordImg; // word_img;
@@ -241,7 +243,10 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         swapImgToLeft.setAnimationListener(new Animation.AnimationListener() {
 
             @Override
-            public void onAnimationStart(Animation animation) {hideTestUI();}
+            public void onAnimationStart(Animation animation) {
+                isUnskippableAnimationRunning = true;
+                hideTestUI();
+            }
 
             @Override
             public void onAnimationRepeat(Animation animation) {}
@@ -258,7 +263,10 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         swapImgToRight.setAnimationListener(new Animation.AnimationListener() {
 
             @Override
-            public void onAnimationStart(Animation animation) {hideTestUI();}
+            public void onAnimationStart(Animation animation) {
+                isUnskippableAnimationRunning=true;
+                hideTestUI();
+            }
 
             @Override
             public void onAnimationRepeat(Animation animation) {}
@@ -283,6 +291,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             @Override
             public void onAnimationEnd(Animation animation) {
                 displayUiAfterAnimation(finalNextTestType);
+                isUnskippableAnimationRunning = false;
             }
 
         });
@@ -300,6 +309,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             @Override
             public void onAnimationEnd(Animation animation) {
                 displayUiAfterAnimation(finalNextTestType);
+                isUnskippableAnimationRunning = false;
             }
 
         });
@@ -577,6 +587,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         knowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(isUnskippableAnimationRunning) return; // wait till animation ends
                 if(demonstrationWords.size()>1)
                     launchAnimation(true, true, true);
                 demonstrationWords.get(0).memoryFactor+=50;
@@ -594,6 +605,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         learnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(isUnskippableAnimationRunning) return; // wait till animation ends
                 if(demonstrationWords.size()>1 && currentTestWords.size()<3)
                     launchAnimation(false, true, true);
                 currentTestWords.add(demonstrationWords.get(0));
