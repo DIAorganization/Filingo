@@ -227,6 +227,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     }
 
     private void launchAnimation(boolean toLeft, boolean nextTestHasImage, boolean thisTestHasImage) {
+        if(!nextTestHasImage && !thisTestHasImage) return; // no animation
         ShapeableImageView img = rootView.findViewById(R.id.word_img);
         Animation swapImgToLeft = AnimationUtils.loadAnimation(thiscontext, R.anim.swap_img_to_left);
         Animation swapImgToRight = AnimationUtils.loadAnimation(thiscontext, R.anim.swap_img_to_right);
