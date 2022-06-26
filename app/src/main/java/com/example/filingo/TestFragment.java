@@ -234,7 +234,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         Animation swapImgFromRight = AnimationUtils.loadAnimation(thiscontext, R.anim.show_img_from_right);
 
         int nextTestType = -1;
-        if(testKeys!=null) nextTestType = testKeys.get(numberOfTestToEndTesting-1)%3;
+        if(testKeys!=null) nextTestType = testKeys.get(numberOfTestToEndTesting-1)/4;
         int finalNextTestType = nextTestType;
 
         swapImgToLeft.setAnimationListener(new Animation.AnimationListener() {
@@ -617,7 +617,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         numberOfTestToEndTesting=currentTestWords.size()*3; // 3 test for each word
         testKeys = new ArrayList<>();
         for(int i=0; i<numberOfTestToEndTesting; i++) testKeys.add(i);
-        Collections.shuffle(testKeys);
+        //Collections.shuffle(testKeys);
         numberOfRightAnswers = 0;
         launchTest();
         resetLives();
@@ -630,7 +630,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         if(numberOfTestToEndTesting < 0) return; // stop if we finish all tests
         int testKey = testKeys.get(numberOfTestToEndTesting);
 
-        Word currentWord = currentTestWords.get(testKey/4);
+        Word currentWord = currentTestWords.get(testKey%4);
         currentWordEnglish = currentWord.english;
 
         // Additional words for testing options(till we have full database)
@@ -652,7 +652,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
 
 
-        int testType = testKey%3; // test type
+        int testType = testKey/4; // test type
         setChosenAnswer(-1, true);
         wordChosenByLetters = "";
 
@@ -736,7 +736,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
                 }
                 if(numberOfTestToEndTesting>0) {
-                    int nextTestType = testKeys.get(numberOfTestToEndTesting-1)%3;
+                    int nextTestType = testKeys.get(numberOfTestToEndTesting-1)/4;
                     boolean nextTestHasImage = nextTestType!=2;
                     boolean thisTestHasImage = testType!=2;
                     launchAnimation(true, nextTestHasImage, thisTestHasImage);
