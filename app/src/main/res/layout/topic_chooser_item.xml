@@ -55,7 +55,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
-            android:id="@+id/progressBar2"
+            android:id="@+id/topic_progress_bar"
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="180dp"
             android:layout_height="6dp"

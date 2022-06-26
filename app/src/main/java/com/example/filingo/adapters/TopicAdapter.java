@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
     public void onBindViewHolder(@NonNull final TopicViewHolder holder, int position) {
         holder.topicIcn.setImageResource(topicList.get(position).topicIcnUrl);
         holder.topicName.setText( topicList.get(position).topicName);
+        holder.topicProgressBar.setProgress(topicList.get(position).topicProgress);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,12 +69,13 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
     public static final class TopicViewHolder extends RecyclerView.ViewHolder{
         ImageView topicIcn;
         TextView topicName;
-        Double topicProgress;//???
+        ProgressBar topicProgressBar;
 
         public TopicViewHolder(@NonNull View itemView) {
             super(itemView);
             topicIcn = itemView.findViewById(R.id.topic_icn);
             topicName  = itemView.findViewById(R.id.topic_name);
+            topicProgressBar = itemView.findViewById(R.id.topic_progress_bar);
         }
     }
 

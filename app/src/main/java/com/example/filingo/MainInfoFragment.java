@@ -3,6 +3,7 @@ package com.example.filingo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -38,6 +40,7 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
     AppCompatButton learnButton;
     AppCompatButton grammarButton;
     AppCompatButton randomButton;
+    ProgressBar mainProgressBar;
 
     public static MainInfoFragment newInstance() {
         MainInfoFragment fragment = new MainInfoFragment();
@@ -60,21 +63,24 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
             userIcn.setImageURI(Uri.parse(ICN_URI));
         textView.setText("Hi " + USER_NAME + ", are you ready to know more ?");
 
+        mainProgressBar = rootView.findViewById(R.id.progressBar);
+        //mainProgressBar.setProgress(75);
 
         topicRecycler = rootView.findViewById(R.id.topic_chooser);
         //set default topics names and icons
 
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "General"));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware"));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Software"));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Travelling"));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Studying"));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Business"));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "General", 0));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware", 0));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Software", 0));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Travelling", 0));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Studying", 0));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Business", 0));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(thiscontext, RecyclerView.VERTICAL, false);
         topicRecycler.setLayoutManager(layoutManager);
         topicAdapter = new TopicAdapter(thiscontext, listOfTopics, MainInfoFragment.this);
         topicRecycler.setAdapter(topicAdapter);
+
 
         learnButton = rootView.findViewById(R.id.main_frame_grammar_info_button);
         grammarButton = rootView.findViewById(R.id.main_frame_grammar_test_button);
