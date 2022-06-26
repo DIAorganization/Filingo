@@ -147,6 +147,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     }
 
     private void loseLife() {
+        Toast.makeText(getContext(), "Your lose one life", Toast.LENGTH_LONG).show();
         Log.d("TAG", "Wrong answer. - heart");
         lives--;
         if(lives==2) heartThird.setVisibility(View.GONE);
@@ -168,7 +169,10 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     }
 
     private void setChosenAnswer(int answer, boolean isCorrect) {
-        if(isDecisionMade) return; // Can't reselect answer
+        if(isDecisionMade) {
+            Toast.makeText(getContext(), "You can't change your answer", Toast.LENGTH_LONG).show();
+            return; // Can't reselect answer
+        }
 
         // reset buttons colors
         answerButtonTopFirst.setBackground((Drawable) ((Context)(((MainActivity)getActivity()))).getResources().getDrawable(R.drawable.test_button_background));
@@ -537,6 +541,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         testTopicName.setText(testingTopic);
         currentTestWords.clear();
         ChooseWord();
+        Toast.makeText(getContext(), "Your must select 4 words for the test", Toast.LENGTH_LONG).show();
         launchWordsForLearningDemonstration(testingTopic);
     }
 
@@ -765,6 +770,10 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             @Override
             public void onClick(View view) {
                 if(!isDecisionMade) {
+                    if (testType==0)
+                        Toast.makeText(getContext(), "All letters must be selected", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getContext(), "Chose something", Toast.LENGTH_LONG).show();
                     Log.d("TAG", "Chose some option to go further");
                     return;
                 }
