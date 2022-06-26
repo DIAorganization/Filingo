@@ -226,17 +226,21 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         }
     }
 
-    private void launchAnimation(boolean toLeft, boolean isFull) {
+    private void launchAnimation(boolean toLeft, boolean nextTestHasImage, boolean thisTestHasImage) {
         ShapeableImageView img = rootView.findViewById(R.id.word_img);
         Animation swapImgToLeft = AnimationUtils.loadAnimation(thiscontext, R.anim.swap_img_to_left);
         Animation swapImgToRight = AnimationUtils.loadAnimation(thiscontext, R.anim.swap_img_to_right);
         Animation swapImgFromLeft = AnimationUtils.loadAnimation(thiscontext, R.anim.swap_img_from_left);
         Animation swapImgFromRight = AnimationUtils.loadAnimation(thiscontext, R.anim.show_img_from_right);
 
+        int nextTestType = -1;
+        if(testKeys!=null) nextTestType = testKeys.get(numberOfTestToEndTesting-1)%3;
+        int finalNextTestType = nextTestType;
+
         swapImgToLeft.setAnimationListener(new Animation.AnimationListener() {
 
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {hideTestUI();}
 
             @Override
             public void onAnimationRepeat(Animation animation) {}
@@ -244,7 +248,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             @Override
             public void onAnimationEnd(Animation animation) {
                 //img.setImageResource(R.drawable.hardware_icn);
-                if(isFull) img.startAnimation(swapImgFromRight);
+                if(nextTestHasImage) img.startAnimation(swapImgFromRight);
+                else displayUiAfterAnimation(finalNextTestType);
             }
 
         });
@@ -252,7 +257,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         swapImgToRight.setAnimationListener(new Animation.AnimationListener() {
 
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {hideTestUI();}
 
             @Override
             public void onAnimationRepeat(Animation animation) {}
@@ -260,13 +265,64 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             @Override
             public void onAnimationEnd(Animation animation) {
                 //img.setImageResource(R.drawable.hardware_icn);
-                if(isFull) img.startAnimation(swapImgFromLeft);
+                if(nextTestHasImage) img.startAnimation(swapImgFromLeft);
+                else displayUiAfterAnimation(finalNextTestType);
             }
 
         });
 
-        if(toLeft) img.startAnimation(swapImgToLeft);
+        swapImgFromLeft.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {}
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                displayUiAfterAnimation(finalNextTestType);
+            }
+
+        });
+
+        swapImgFromRight.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if(!thisTestHasImage) hideTestUI();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                displayUiAfterAnimation(finalNextTestType);
+            }
+
+        });
+
+        if(!thisTestHasImage) img.startAnimation(swapImgFromRight);
+        else if(toLeft) img.startAnimation(swapImgToLeft);
         else img.startAnimation(swapImgToRight);
+    }
+
+    private void displayUiAfterAnimation(int nextTestType) {
+        switch(nextTestType) {
+            case 0:
+                AudioTestFrameEnEn();
+                break;
+            case 1:
+                TranslateTestFrameUaEn();
+                break;
+            case 2:
+                TranslateTestFrameEnUa();
+                break;
+            default:
+                ChooseWord();
+                break;
+        }
     }
 
     private void setTestResultView() {
@@ -333,6 +389,23 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         answerButtonTopThird.setVisibility(View.GONE);
         answerButtonTopFourth.setVisibility(View.GONE);
         wordValueOnTestScreen.setVisibility(View.GONE);
+    }
+
+    private void hideTestUI() {
+        wordValueOnChooseScreen.setVisibility(View.GONE);
+        wordTranslateOnChooseScreen.setVisibility(View.GONE);
+        letterRecycler.setVisibility(View.GONE);
+        wordTranslateOnTestScreen.setVisibility(View.GONE);
+        answerButtonBottomFirst.setVisibility(View.GONE);
+        answerButtonBottomSecond.setVisibility(View.GONE);
+        answerButtonBottomThird.setVisibility(View.GONE);
+        answerButtonBottomFourth.setVisibility(View.GONE);
+        answerButtonTopFirst.setVisibility(View.GONE);
+        answerButtonTopSecond.setVisibility(View.GONE);
+        answerButtonTopThird.setVisibility(View.GONE);
+        answerButtonTopFourth.setVisibility(View.GONE);
+        wordValueOnTestScreen.setVisibility(View.GONE);
+        wordAudioImgButton.setVisibility(View.GONE);
     }
 
     public void AudioTestFrameEnEn(){
@@ -504,7 +577,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             @Override
             public void onClick(View view) {
                 if(demonstrationWords.size()>1)
-                    launchAnimation(true, true);
+                    launchAnimation(true, true, true);
                 demonstrationWords.get(0).memoryFactor+=50;
                 demonstrationWords.remove(0);
                 if(demonstrationWords.size()>0) {
@@ -520,9 +593,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         learnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(demonstrationWords.size()>1 && currentTestWords.size()<3) {
-                    launchAnimation(false, true);
-                }
+                if(demonstrationWords.size()>1 && currentTestWords.size()<3)
+                    launchAnimation(false, true, true);
                 currentTestWords.add(demonstrationWords.get(0));
                 demonstrationWords.remove(0);
                 if(currentTestWords.size()>3) {
@@ -665,11 +737,9 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 }
                 if(numberOfTestToEndTesting>0) {
                     int nextTestType = testKeys.get(numberOfTestToEndTesting-1)%3;
-                    if(nextTestType!=2) {
-                        launchAnimation(true, true);
-                    } else {
-                        launchAnimation(true, false);
-                    }
+                    boolean nextTestHasImage = nextTestType!=2;
+                    boolean thisTestHasImage = testType!=2;
+                    launchAnimation(true, nextTestHasImage, thisTestHasImage);
                 }
                 String answerText = "";
                 switch (testType) {
