@@ -59,7 +59,7 @@ public class StartFragment extends Fragment {
                     editor.putString("icnUri","");
 
                 if(nameOfUser == null || nameOfUser.getText().toString().equals(""))
-                    editor.putString("userName","Andy");
+                    editor.putString("userName","User");
                 else
                     editor.putString("userName",nameOfUser.getText().toString());
                 editor.apply();

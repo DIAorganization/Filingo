@@ -77,11 +77,12 @@
         app:layout_constraintStart_toStartOf="@+id/user_greetings_left_guideline"
         app:layout_constraintTop_toTopOf="@+id/info_background" />
 
+
     <TextView
         android:id="@+id/progress_text"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginTop="56dp"
+        android:layout_width="168dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="68dp"
         android:fontFamily="sans-serif"
         android:includeFontPadding="false"
@@ -91,10 +92,9 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/main_frame_vertical_right_guideline"
-        app:layout_constraintHorizontal_bias="0.744"
+        app:layout_constraintHorizontal_bias="0.746"
         app:layout_constraintStart_toStartOf="@+id/main_frame_vertical_left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/user_greetings" />
-
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/bottom_menu_background"
@@ -174,19 +174,18 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.98"/>
 
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/white"
-        android:layout_width="196dp"
-        android:layout_height="32dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="195dp"
+        android:layout_height="8dp"
+        android:layout_marginBottom="44dp"
+        android:progress="25"
+        android:progressDrawable="@drawable/progress_background"
         app:layout_constraintBottom_toBottomOf="@+id/info_background"
         app:layout_constraintEnd_toEndOf="@+id/progress_text"
-        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="@+id/progress_text" />
-
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/main_frame_grammar_info_button"

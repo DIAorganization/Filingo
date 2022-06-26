@@ -53,6 +53,7 @@ public class TestResultFragment extends Fragment {
         testProgressTextView = rootView.findViewById(R.id.finish_test_progress_text);
         testProgressBar = rootView.findViewById(R.id.finish_test_progressBar);
 
+
         againButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
