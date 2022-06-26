@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,11 +18,24 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        displayStartFragment();
+        checkStartScreen();
+    }
+
+    public void checkStartScreen() {
+        SharedPreferences sharedPreferences = this.getSharedPreferences(MainActivity.SHARED_PREFS, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(SHARED_PREFS, 0);
+        String ICN_URI = sharedPreferences.getString(StartFragment.ICN_URI,null);
+        String USER_NAME = sharedPreferences.getString(StartFragment.USER_NAME,null);
+
+        if (ICN_URI == null || USER_NAME == null) {
+            displayStartFragment();
+        } else {
+            displayMainInfoFragment();
+        }
     }
 
 
-    private void displayStartFragment() {
+    public void displayStartFragment() {
         StartFragment startFragment = StartFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
