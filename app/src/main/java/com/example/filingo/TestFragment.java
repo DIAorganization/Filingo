@@ -3,6 +3,8 @@ package com.example.filingo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.cardview.widget.CardView;
@@ -30,11 +33,15 @@ import com.example.filingo.database.Word;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
 
 public class TestFragment extends Fragment implements LetterAdapter.OnLetterClicked{
 
@@ -738,15 +745,28 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 //
         }
 
+        wordAudioImgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MediaPlayer player = new MediaPlayer();
+                try {
+                    player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    player.setDataSource("https://ssl.gstatic.com/dictionary/static/sounds/20200429/hello--_gb_1.mp3");
+                    player.prepare();
+                    player.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "This word haven't got audio or you have no connection", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!isDecisionMade) {
                     Log.d("TAG", "Chose some option to go further");
                     return;
-                } else {
-                    Log.d("TAG", "gge some option to go further");
-
                 }
                 if(numberOfTestToEndTesting>0) {
                     int nextTestType = testKeys.get(numberOfTestToEndTesting-1)/4;
