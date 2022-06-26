@@ -170,7 +170,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     private void setChosenAnswer(int answer, boolean isCorrect) {
         if(isDecisionMade) {
-            Toast.makeText(getContext(), "You can't change your answer", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "You can't change your answer", Toast.LENGTH_SHORT).show();
             return; // Can't reselect answer
         }
 
@@ -541,7 +541,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         testTopicName.setText(testingTopic);
         currentTestWords.clear();
         ChooseWord();
-        Toast.makeText(getContext(), "Your must select 4 words for the test", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Your must select 4 words for the test", Toast.LENGTH_SHORT).show();
         launchWordsForLearningDemonstration(testingTopic);
     }
 
@@ -761,7 +761,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                     player.start();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "This word haven't got audio or you have no connection", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "This word haven't got audio or you have no connection", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -771,9 +771,9 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             public void onClick(View view) {
                 if(!isDecisionMade) {
                     if (testType==0)
-                        Toast.makeText(getContext(), "All letters must be selected", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "All letters must be selected", Toast.LENGTH_SHORT).show();
                     else
-                        Toast.makeText(getContext(), "Chose something", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Chose something", Toast.LENGTH_SHORT).show();
                     Log.d("TAG", "Chose some option to go further");
                     return;
                 }
