@@ -69,9 +69,9 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
         topicRecycler = rootView.findViewById(R.id.topic_chooser);
         //set default topics names and icons
 
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "General", 0));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware", 0));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Software", 0));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "General", 25));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware", 25));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Software", 25));
         listOfTopics.add(new Topic(R.drawable.hardware_icn, "Travelling", 0));
         listOfTopics.add(new Topic(R.drawable.hardware_icn, "Studying", 0));
         listOfTopics.add(new Topic(R.drawable.hardware_icn, "Business", 0));

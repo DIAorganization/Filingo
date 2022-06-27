@@ -57,24 +57,23 @@ public class TestResultFragment extends Fragment {
         againButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onDestroyView();
-                getFragmentManager().beginTransaction().remove((Fragment) TestResultFragment.this).commitAllowingStateLoss();
-               // ((MainActivity)getActivity()).displayTestFragment(topicName);
+               ((MainActivity)getActivity()).displayTestFragment(topicName);
             }
         });
 
         exitTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onDestroyView();
-               // ((MainActivity)getActivity()).displayMainInfoFragment();
+               ((MainActivity)getActivity()).displayMainInfoFragment();
             }
         });
 
         testProgressTextView.setText("Test has been PASSED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWordsSize*3));
         if(lives<=0)
             testProgressTextView.setText("Test has been FAILED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWordsSize*3));
-        testProgressBar.setProgress(numberOfRightAnswers/(currentTestWordsSize*3));
+        double progress = numberOfRightAnswers/(currentTestWordsSize*3.);
+        testProgressBar.setProgress((int)(100 * progress));
+
     }
 
     @Override
