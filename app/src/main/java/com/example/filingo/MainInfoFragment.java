@@ -91,12 +91,14 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
             }
             numberOfAllWords+=allTopicWords.size();
             double topicProgress = ((double) memoryFactorSum) / (allTopicWords.size()*100);
-            topicProgresses.add((int)topicProgress);
-            Log.d("UTAG", topicNames[i]+": "+TestRepository.getWordsByTopic(1).size());
+            topicProgress*=100;
+            topicProgresses.add((int)Math.round(topicProgress));
+            Log.d("UTAG", topicNames[i]+": "+memoryFactorSum+"; "+topicProgress);
         }
         double mainProgress = ((double) allTopicsMemoryFactorSum) / (numberOfAllWords*100);
+        mainProgress*=100;
         mainProgressBar = rootView.findViewById(R.id.progressBar);
-        mainProgressBar.setProgress((int)mainProgress);
+        mainProgressBar.setProgress((int)(Math.round(mainProgress)));
 
         //set default topics names and icons
         listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[0], topicProgresses.get(0)));

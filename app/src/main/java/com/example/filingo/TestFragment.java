@@ -239,7 +239,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         Animation swapImgFromRight = AnimationUtils.loadAnimation(thiscontext, R.anim.show_img_from_right);
 
         int nextTestType = -1;
-        if(testKeys!=null) nextTestType = testKeys.get(numberOfTestToEndTesting-1)/4;
+        if(testKeys!=null) nextTestType = testKeys.get(numberOfTestToEndTesting-1)/currentTestWords.size();
         int finalNextTestType = nextTestType;
 
         swapImgToLeft.setAnimationListener(new Animation.AnimationListener() {
@@ -537,7 +537,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         testTopicName.setText(testingTopic);
         currentTestWords.clear();
         ChooseWord();
-        Toast.makeText(getContext(), "Your must select 4 words for the test", Toast.LENGTH_SHORT).show();
         launchWordsForLearningDemonstration(testingTopic);
     }
 
@@ -549,13 +548,11 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     }
 
     private void launchWordsForLearningDemonstration(String topicName) {
-        // When DB will be ready replace allTopicWords getting by method that get all words(sorted with memoryFactor) from topic
         PriorityQueue<Word> pqAllWord = TestRepository.getWordsByTopic(topicNameToTopicNumber(topicName));
         // Debug
         for(Word w: pqAllWord) {
             Log.d("UTAG", ""+w.english+": "+w.memoryFactor);
         }
-
         // Debug
 
         allTopicWords = new ArrayList<>(pqAllWord.size());; // create by copying, need them to get random answer options
@@ -586,9 +583,12 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 startTesting();
             } else {
                 Log.d("TAG", "No word to demonstrate. You learn every word");
-                getFragmentManager().beginTransaction().remove((Fragment) TestFragment.this).commitAllowingStateLoss();
+                Toast.makeText(getContext(), "You have learnt all words form this topic", Toast.LENGTH_SHORT).show();
+                ((MainActivity)getActivity()).displayMainInfoFragment();
             }
             return;
+        } else {
+            Toast.makeText(getContext(), "Your must select 4 words for the test", Toast.LENGTH_SHORT).show();
         }
         Collections.shuffle(demonstrationWords); // random demonstration order
         wordValueOnChooseScreen.setText(demonstrationWords.get(0).english);
@@ -655,6 +655,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         }
     }
 
+
     private void startTesting() {
         for(Word word : currentTestWords) {
             Log.d("TAG", "You will learn: "+word.english);
@@ -676,7 +677,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         if(numberOfTestToEndTesting < 0) return; // stop if we finish all tests
         int testKey = testKeys.get(numberOfTestToEndTesting);
 
-        Word currentWord = currentTestWords.get(testKey%4);
+        Word currentWord = currentTestWords.get(testKey%currentTestWords.size());
         currentWordEnglish = currentWord.english;
 
         // Additional words for testing options(till we have full database)
@@ -698,7 +699,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
 
 
-        int testType = testKey/4; // test type
+        int testType = testKey/currentTestWords.size(); // test type
         setChosenAnswer(-1, true);
         wordChosenByLetters = "";
 
@@ -812,11 +813,11 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                     return;
                 }
                 if(numberOfTestToEndTesting>0) {
-                    int nextTestType = testKeys.get(numberOfTestToEndTesting-1)/4;
+                    int nextTestType = testKeys.get(numberOfTestToEndTesting-1)/currentTestWords.size();
                     boolean nextTestHasImage = nextTestType!=2;
                     boolean thisTestHasImage = testType!=2;
                     int nextTestKey = testKeys.get(numberOfTestToEndTesting-1);
-                    String nextTestImage = currentTestWords.get(nextTestKey%4).imageUrl;
+                    String nextTestImage = currentTestWords.get(nextTestKey%currentTestWords.size()).imageUrl;
                     launchAnimation(true, nextTestHasImage, thisTestHasImage, nextTestImage);
                 }
                 String answerText = "";

@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Theme_Filingo);
         TestRepository.initWordDatabase(getApplication());
+        setTheme(R.style.Theme_Filingo);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkStartScreen();
@@ -74,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        displayMainInfoFragment();
+    }
 
     public void displayTestFragment(String topicName){
         displayMainInfoFragment();
