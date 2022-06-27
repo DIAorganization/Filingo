@@ -1,11 +1,9 @@
 package com.example.filingo;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,33 +18,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.filingo.adapters.LetterAdapter;
-import com.example.filingo.adapters.TenseAdapter;
-import com.example.filingo.adapters.Topic;
-import com.example.filingo.adapters.TopicAdapter;
 import com.example.filingo.database.TestRepository;
 import com.example.filingo.database.Word;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Random;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 
 public class TestFragment extends Fragment implements LetterAdapter.OnLetterClicked{
 
@@ -56,7 +44,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     private static final int POINTS_FOR_PERFECT_TEST = 5; // no life losing test
 
 
-    private String currentTestTopicName = "";
     private static int numberOfTestToEndTesting = 0; // need to count number of test in testing
     private static int numberOfRightAnswers = 0;  // need to count right answers in testing
     private static int chosenAnswer = -1; // to track chosen answer in test
@@ -105,12 +92,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     ShapeableImageView bonusIcon;
 
     TextView numberOfTestView;
-
-    // Results screen elements
-    Button againButton;
-    Button exitTestButton;
-    TextView testProgressTextView;
-    ProgressBar testProgressBar;
 
 
     public View rootView;
@@ -544,7 +525,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
 
     private void launchTesting(String testingTopic) {
-        currentTestTopicName=testingTopic;
         setTestFragment();
         testTopicName.setText(testingTopic);
         currentTestWords.clear();
