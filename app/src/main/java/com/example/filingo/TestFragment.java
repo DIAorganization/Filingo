@@ -29,15 +29,20 @@ import com.example.filingo.adapters.LetterAdapter;
 import com.example.filingo.adapters.TenseAdapter;
 import com.example.filingo.adapters.Topic;
 import com.example.filingo.adapters.TopicAdapter;
+import com.example.filingo.database.TestRepository;
 import com.example.filingo.database.Word;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 import javax.net.ssl.HostnameVerifier;
@@ -239,7 +244,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         }
     }
 
-    private void launchAnimation(boolean toLeft, boolean nextTestHasImage, boolean thisTestHasImage) {
+    private void launchAnimation(boolean toLeft, boolean nextTestHasImage, boolean thisTestHasImage, String nextImageFileName) {
         if(!nextTestHasImage && !thisTestHasImage) return; // no animation
         ShapeableImageView img = rootView.findViewById(R.id.word_img);
         Animation swapImgToLeft = AnimationUtils.loadAnimation(thiscontext, R.anim.swap_img_to_left);
@@ -294,7 +299,9 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         swapImgFromLeft.setAnimationListener(new Animation.AnimationListener() {
 
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {
+                if(nextImageFileName!=null) setTestImage(nextImageFileName);
+            }
 
             @Override
             public void onAnimationRepeat(Animation animation) {}
@@ -311,6 +318,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
             @Override
             public void onAnimationStart(Animation animation) {
+                if(nextImageFileName!=null) setTestImage(nextImageFileName);
                 if(!thisTestHasImage) hideTestUI();
             }
 
@@ -563,7 +571,12 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     private void launchWordsForLearningDemonstration(String topicName) {
 
         // When DB will be ready replace allTopicWords getting by method that get all words(sorted with memoryFactor) from topic
-        allTopicWords = new ArrayList<>(allTopicWordsFakeDBData); // create by copying, need them to get random answer options
+        PriorityQueue<Word> pqAllWord = TestRepository.getWordsByTopic(1);
+        allTopicWords = new ArrayList<>(pqAllWord.size());; // create by copying, need them to get random answer options
+        while (!pqAllWord.isEmpty()) {
+            allTopicWords.add(pqAllWord.poll());
+        }
+        Log.d("TAG", " "+allTopicWords.size());
 
         ArrayList<Word> filteredWords = new ArrayList<>(allTopicWords);
 
@@ -595,18 +608,20 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         Collections.shuffle(demonstrationWords); // random demonstration order
         wordValueOnChooseScreen.setText(demonstrationWords.get(0).english);
         wordTranslateOnChooseScreen.setText(demonstrationWords.get(0).ukrainian.get(0));
+        setTestImage(demonstrationWords.get(0).imageUrl);
 
         knowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(isUnskippableAnimationRunning) return; // wait till animation ends
                 if(demonstrationWords.size()>1)
-                    launchAnimation(true, true, true);
+                    launchAnimation(true, true, true, demonstrationWords.get(1).imageUrl);
                 demonstrationWords.get(0).memoryFactor+=50;
                 demonstrationWords.remove(0);
                 if(demonstrationWords.size()>0) {
                     wordValueOnChooseScreen.setText(demonstrationWords.get(0).english);
                     wordTranslateOnChooseScreen.setText(demonstrationWords.get(0).ukrainian.get(0));
+                    //setTestImage(demonstrationWords.get(0).imageUrl);
                 } else {
                     Log.d("TAG", "All words have been demonstrated. Start new cycle");
                     launchWordsForLearningDemonstration(topicName);
@@ -619,7 +634,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             public void onClick(View view) {
                 if(isUnskippableAnimationRunning) return; // wait till animation ends
                 if(demonstrationWords.size()>1 && currentTestWords.size()<3)
-                    launchAnimation(false, true, true);
+                    launchAnimation(false, true, true, demonstrationWords.get(1).imageUrl);
                 currentTestWords.add(demonstrationWords.get(0));
                 demonstrationWords.remove(0);
                 if(currentTestWords.size()>3) {
@@ -627,11 +642,31 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 } else if(demonstrationWords.size()>0) {
                     wordValueOnChooseScreen.setText(demonstrationWords.get(0).english);
                     wordTranslateOnChooseScreen.setText(demonstrationWords.get(0).ukrainian.get(0));
+                    //setTestImage(demonstrationWords.get(0).imageUrl);
                 } else {
                     launchWordsForLearningDemonstration(topicName);
                 }
             }
         });
+    }
+
+    private void setTestImage(String imageFileName) {
+        try
+        {
+            // get input stream
+            InputStream ims = getActivity().getAssets().open("images/"+imageFileName);
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            // set image to ImageView
+            wordImg.setImageDrawable(d);
+            ims .close();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            wordImg.setImageResource(R.drawable.hardware_icn);
+            Log.d("TAG", "Can't load image "+imageFileName);
+        }
     }
 
     private void startTesting() {
@@ -681,6 +716,9 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         setChosenAnswer(-1, true);
         wordChosenByLetters = "";
 
+        if(numberOfTestToEndTesting==currentTestWords.size()-1) { // set for first image, animation will do it for others
+            setTestImage(currentWord.imageUrl);
+        }
         switch (testType) {
             case 0:
                 AudioTestFrameEnEn();
@@ -756,12 +794,22 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 MediaPlayer player = new MediaPlayer();
                 try {
                     player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    player.setDataSource("https://ssl.gstatic.com/dictionary/static/sounds/20200429/hello--_gb_1.mp3");
+                    String dataSourceStr = "https://ssl.gstatic.com/dictionary/static/sounds/20200429/"+currentWord.english+"--_gb_1.mp3";
+                    player.setDataSource(dataSourceStr);
                     player.prepare();
                     player.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), "This word haven't got audio or you have no connection", Toast.LENGTH_SHORT).show();
+                } catch (Exception ex) {
+                    // try another audio
+                    try {
+                        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        String dataSourceStr = "https://api.dictionaryapi.dev/media/pronunciations/en/"+currentWord.english+"-us.mp3";
+                        player.setDataSource(dataSourceStr);
+                        player.prepare();
+                        player.start();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "This word haven't got audio or you have no connection", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -781,7 +829,9 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                     int nextTestType = testKeys.get(numberOfTestToEndTesting-1)/4;
                     boolean nextTestHasImage = nextTestType!=2;
                     boolean thisTestHasImage = testType!=2;
-                    launchAnimation(true, nextTestHasImage, thisTestHasImage);
+                    int nextTestKey = testKeys.get(numberOfTestToEndTesting-1);
+                    String nextTestImage = currentTestWords.get(nextTestKey%4).imageUrl;
+                    launchAnimation(true, nextTestHasImage, thisTestHasImage, nextTestImage);
                 }
                 String answerText = "";
                 switch (testType) {

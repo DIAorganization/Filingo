@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.example.filingo.database.TestRepository;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String SHARED_PREFS = "sharedPrefs";
@@ -16,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Filingo);
+        TestRepository.initWordDatabase(getApplication());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkStartScreen();
