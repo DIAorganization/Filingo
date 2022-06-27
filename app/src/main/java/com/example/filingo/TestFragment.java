@@ -39,6 +39,7 @@ import java.util.Random;
 
 public class TestFragment extends Fragment implements LetterAdapter.OnLetterClicked{
 
+    private static final int POINTS_FOR_KNOWING = 50;
     private static final int POINTS_FOR_TESTING = 5; // every word in test have this
     private static final int POINTS_FOR_RIGHT_ANSWER = 5; // for each right answer
     private static final int POINTS_FOR_SUCCESSFUL_TEST = 5; // up to 2 life losing test
@@ -341,6 +342,9 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     }
 
     private void setTestResultView() {
+        for(Word w: currentTestWords) {
+            TestRepository.updateWord(w);
+        }
         ((MainActivity)getActivity()).displayTestResult(topicName,lives,numberOfRightAnswers, currentTestWords.size());
     }
 
@@ -537,9 +541,23 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         launchWordsForLearningDemonstration(testingTopic);
     }
 
+    private int topicNameToTopicNumber(String topicName) {
+        for(int i=0; i<MainInfoFragment.topicNames.length; i++) {
+            if(MainInfoFragment.topicNames[i].equals(topicName)) return i+1;
+        }
+        return -1;
+    }
+
     private void launchWordsForLearningDemonstration(String topicName) {
         // When DB will be ready replace allTopicWords getting by method that get all words(sorted with memoryFactor) from topic
-        PriorityQueue<Word> pqAllWord = TestRepository.getWordsByTopic(1);
+        PriorityQueue<Word> pqAllWord = TestRepository.getWordsByTopic(topicNameToTopicNumber(topicName));
+        // Debug
+        for(Word w: pqAllWord) {
+            Log.d("UTAG", ""+w.english+": "+w.memoryFactor);
+        }
+
+        // Debug
+
         allTopicWords = new ArrayList<>(pqAllWord.size());; // create by copying, need them to get random answer options
         while (!pqAllWord.isEmpty()) {
             allTopicWords.add(pqAllWord.poll());
@@ -583,7 +601,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 if(isUnskippableAnimationRunning) return; // wait till animation ends
                 if(demonstrationWords.size()>1)
                     launchAnimation(true, true, true, demonstrationWords.get(1).imageUrl);
-                demonstrationWords.get(0).memoryFactor+=50;
+                demonstrationWords.get(0).memoryFactor+=POINTS_FOR_KNOWING;
+                TestRepository.updateWord(demonstrationWords.get(0));
                 demonstrationWords.remove(0);
                 if(demonstrationWords.size()>0) {
                     wordValueOnChooseScreen.setText(demonstrationWords.get(0).english);

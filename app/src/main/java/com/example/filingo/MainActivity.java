@@ -8,8 +8,12 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.filingo.database.TestRepository;
+import com.example.filingo.database.Word;
+
+import java.util.PriorityQueue;
 
 public class MainActivity extends AppCompatActivity {
 

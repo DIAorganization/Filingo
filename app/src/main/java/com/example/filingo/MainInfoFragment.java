@@ -22,10 +22,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.filingo.adapters.Topic;
 import com.example.filingo.adapters.TopicAdapter;
+import com.example.filingo.database.TestRepository;
+import com.example.filingo.database.Word;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Random;
 
 public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicClicked {
@@ -34,6 +39,15 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
     private Context thiscontext;
     private RecyclerView topicRecycler; // topic_chooser;
     private TopicAdapter topicAdapter; // tenses_chooser;
+
+    public static String[] topicNames = {
+            "Family",
+            "Traits",
+            "Food",
+            "Body parts",
+            "Accommodation",
+            "Travelling"
+    };
 
     private  ArrayList<Topic> listOfTopics = new ArrayList<>();
 
@@ -63,18 +77,34 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
             userIcn.setImageURI(Uri.parse(ICN_URI));
         textView.setText("Hi " + USER_NAME + ", are you ready to know more ?");
 
-        mainProgressBar = rootView.findViewById(R.id.progressBar);
-        //mainProgressBar.setProgress(75);
-
         topicRecycler = rootView.findViewById(R.id.topic_chooser);
-        //set default topics names and icons
 
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "General", 25));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Hardware", 25));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Software", 25));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Travelling", 0));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Studying", 0));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, "Business", 0));
+        int allTopicsMemoryFactorSum=0;
+        int numberOfAllWords=0;
+        ArrayList<Integer> topicProgresses = new ArrayList<>();
+        for(int i=0; i<topicNames.length; i++) {
+            PriorityQueue<Word> allTopicWords = TestRepository.getWordsByTopic(i+1);
+            int memoryFactorSum=0;
+            for(Word w: allTopicWords) {
+                memoryFactorSum += w.memoryFactor;
+                allTopicsMemoryFactorSum += w.memoryFactor;
+            }
+            numberOfAllWords+=allTopicWords.size();
+            double topicProgress = ((double) memoryFactorSum) / (allTopicWords.size()*100);
+            topicProgresses.add((int)topicProgress);
+            Log.d("UTAG", topicNames[i]+": "+TestRepository.getWordsByTopic(1).size());
+        }
+        double mainProgress = ((double) allTopicsMemoryFactorSum) / (numberOfAllWords*100);
+        mainProgressBar = rootView.findViewById(R.id.progressBar);
+        mainProgressBar.setProgress((int)mainProgress);
+
+        //set default topics names and icons
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[0], topicProgresses.get(0)));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[1], topicProgresses.get(1)));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[2], topicProgresses.get(2)));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[3], topicProgresses.get(3)));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[4], topicProgresses.get(4)));
+        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[5], topicProgresses.get(5)));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(thiscontext, RecyclerView.VERTICAL, false);
         topicRecycler.setLayoutManager(layoutManager);
