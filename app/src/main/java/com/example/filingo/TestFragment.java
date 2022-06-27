@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,19 +47,17 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     private static int numberOfTestToEndTesting = 0; // need to count number of test in testing
     private static int numberOfRightAnswers = 0;  // need to count right answers in testing
-    private static int chosenAnswer = -1; // to track chosen answer in test
+    private static int chosenAnswer; // to track chosen answer in test
     private static String wordChosenByLetters = "";
     private static final int START_LIVES = 3;
-    private static int lives = START_LIVES; // number of lives(hears) player currently have
+    private static int lives; // number of lives(hears) player currently have
     private static ArrayList<Word> allTopicWords; // we need all words from topic to get random answer options
     private static ArrayList<Word> currentTestWords = new ArrayList<>(); // words(up to 4) that are in the test now
 
     private static ArrayList<Integer> testKeys; // needed for test generation in random order
-    private static boolean isDecisionMade = false; // to check if we go to the next test
-    private static String currentWordEnglish="";
-    private static boolean isUnskippableAnimationRunning = false;
-
-    private static ArrayList<Word> allTopicWordsFakeDBData; // delete after DB will be full working
+    private static boolean isDecisionMade; // to check if we go to the next test
+    private static String currentWordEnglish;
+    private static boolean isUnskippableAnimationRunning;
 
 
     TextView testTopicName; // topic_name;
@@ -109,9 +108,14 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.test_fragment, container, false);
         thiscontext = container.getContext();
-
+        isUnskippableAnimationRunning=false;
+        currentTestWords.clear();
+        chosenAnswer = -1;
+        currentWordEnglish="";
+        isDecisionMade=false;
+        lives = START_LIVES;
+        testKeys=null;
         if(!topicName.equals(MainActivity.KEY_FOR_GRAMMAR_TEST)){
-            generateFakeDBTopicWords(30);
             launchTesting(topicName);
         }else{
             //If pressed GRAMMAR button use test for en ua to grammar;
@@ -533,30 +537,13 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         launchWordsForLearningDemonstration(testingTopic);
     }
 
-    private void generateFakeDBTopicWords(int numberOfWords) {
-        allTopicWordsFakeDBData = new ArrayList<>();
-        for(int i=0; i<numberOfWords; i++) {
-            Word word = new Word(); word.id = i; word.english = "word"+i;
-            {
-                LinkedList<String> temp = new LinkedList<>();
-                temp.add("переклад"+i);  temp.add("переклад"+i+"-"+1);
-                temp.add("переклад"+i+"-"+2); temp.add("переклад"+i+"-"+3);
-                word.ukrainian = temp;
-            }
-            word.audioUrl = null; word.imageUrl = null; word.topic = 1; word.memoryFactor = 0;
-            allTopicWordsFakeDBData.add(word);
-        }
-    }
-
     private void launchWordsForLearningDemonstration(String topicName) {
-
         // When DB will be ready replace allTopicWords getting by method that get all words(sorted with memoryFactor) from topic
         PriorityQueue<Word> pqAllWord = TestRepository.getWordsByTopic(1);
         allTopicWords = new ArrayList<>(pqAllWord.size());; // create by copying, need them to get random answer options
         while (!pqAllWord.isEmpty()) {
             allTopicWords.add(pqAllWord.poll());
         }
-        Log.d("TAG", " "+allTopicWords.size());
 
         ArrayList<Word> filteredWords = new ArrayList<>(allTopicWords);
 

@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public void displayMainInfoFragment(){
         mainInfoFragment = MainInfoFragment.newInstance();
         fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); // clear fragment stack
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if(startFragment!= null)
             fragmentTransaction.replace(R.id.main_frame_info_fragment, mainInfoFragment).show(mainInfoFragment).hide(startFragment).commit();
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void displayTestFragment(String topicName){
+        displayMainInfoFragment();
         testFragment = TestFragment.newInstance(topicName);
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void displayTensesInfo(){
+        displayMainInfoFragment();
         tensesInfo = TensesInfo.newInstance();
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -88,19 +91,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void displayTenseInfo(int pos){
+        displayMainInfoFragment();
         tenseInfo = TenseInfo.newInstance(pos);
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_tense_info, tenseInfo).hide(tensesInfo).addToBackStack(null).commit();
     }
 
-    public void displayTestResult(String topicName, Integer lives, Integer numberOfRightAnswers, Integer currentTestWordsSize){
-        testResultFragment = TestResultFragment.newInstance(topicName,lives,numberOfRightAnswers, currentTestWordsSize);
+    public void displayTestResult(String topicName, Integer lives, Integer numberOfRightAnswers, Integer currentTestWordsSize) {
+        displayMainInfoFragment();
+        testResultFragment = TestResultFragment.newInstance(topicName, lives, numberOfRightAnswers, currentTestWordsSize);
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.main_test_result, testResultFragment).hide(testFragment).commit();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
-
 }
 
 
