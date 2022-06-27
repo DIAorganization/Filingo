@@ -74,7 +74,9 @@ public class TestResultFragment extends Fragment {
         testProgressTextView.setText("Test has been PASSED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWordsSize*3));
         if(lives<=0)
             testProgressTextView.setText("Test has been FAILED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWordsSize*3));
-        testProgressBar.setProgress(numberOfRightAnswers/(currentTestWordsSize*3));
+        double progress = numberOfRightAnswers/(currentTestWordsSize*3.);
+        testProgressBar.setProgress((int)(100 * progress));
+
     }
 
     @Override

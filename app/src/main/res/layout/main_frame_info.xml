@@ -80,10 +80,10 @@
 
     <TextView
         android:id="@+id/progress_text"
-        android:layout_width="168dp"
-        android:layout_height="29dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="68dp"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="60dp"
+
         android:fontFamily="sans-serif"
         android:includeFontPadding="false"
         android:letterSpacing="0.1"
@@ -92,7 +92,7 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/main_frame_vertical_right_guideline"
-        app:layout_constraintHorizontal_bias="0.746"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/main_frame_vertical_left_guideline"
         app:layout_constraintTop_toBottomOf="@+id/user_greetings" />
 
@@ -180,12 +180,15 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="195dp"
         android:layout_height="8dp"
-        android:layout_marginBottom="44dp"
+        android:layout_marginBottom="36dp"
         android:progress="25"
         android:progressDrawable="@drawable/progress_background"
         app:layout_constraintBottom_toBottomOf="@+id/info_background"
         app:layout_constraintEnd_toEndOf="@+id/progress_text"
-        app:layout_constraintStart_toStartOf="@+id/progress_text" />
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/progress_text"
+        app:layout_constraintTop_toBottomOf="@+id/progress_text"
+        app:layout_constraintVertical_bias="1.0" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/main_frame_grammar_info_button"
