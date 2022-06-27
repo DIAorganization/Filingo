@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -63,7 +65,6 @@ public class StartFragment extends Fragment {
                 else
                     editor.putString("userName",nameOfUser.getText().toString());
                 editor.apply();
-                onDestroyView();
 
                 ((MainActivity)getActivity()).displayMainInfoFragment();
             }

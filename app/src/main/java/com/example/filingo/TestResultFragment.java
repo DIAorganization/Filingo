@@ -57,17 +57,14 @@ public class TestResultFragment extends Fragment {
         againButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onDestroyView();
-                getFragmentManager().beginTransaction().remove((Fragment) TestResultFragment.this).commitAllowingStateLoss();
-               // ((MainActivity)getActivity()).displayTestFragment(topicName);
+               ((MainActivity)getActivity()).displayTestFragment(topicName);
             }
         });
 
         exitTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onDestroyView();
-               // ((MainActivity)getActivity()).displayMainInfoFragment();
+               ((MainActivity)getActivity()).displayMainInfoFragment();
             }
         });
 
