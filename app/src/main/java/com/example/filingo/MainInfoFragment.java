@@ -138,7 +138,7 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
             @Override
             public void onClick(View view) {
                 Random random = new Random();
-                int index = random.nextInt(listOfTopics.size() + 1);
+                int index = random.nextInt(listOfTopics.size());
                 ((MainActivity)getActivity()).displayTestFragment(listOfTopics.get(index).topicName);
             }
         });
