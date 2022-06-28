@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         testResultFragment = TestResultFragment.newInstance(topicName, lives, numberOfRightAnswers, currentTestWordsSize);
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.main_test_result, testResultFragment).hide(testFragment).commit();
+        fragmentTransaction.replace(R.id.main_test_result, testResultFragment).hide(testFragment).hide(mainInfoFragment).commit();
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 }
