@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -170,7 +171,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         }
         Collections.shuffle(listOfLetters); // set random order
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(thiscontext, RecyclerView.HORIZONTAL, false);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(thiscontext, 6);
         letterRecycler.setLayoutManager(layoutManager);
         letterAdapter = new LetterAdapter(thiscontext, listOfLetters, TestFragment.this);
         letterRecycler.setAdapter(letterAdapter);

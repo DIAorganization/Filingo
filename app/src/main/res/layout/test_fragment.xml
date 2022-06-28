@@ -237,7 +237,6 @@
         android:id="@+id/word_audio_img_button"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:shapeAppearanceOverlay="@style/round_image_30"
         android:focusable="true"
         android:scaleType="centerCrop"
         android:visibility="visible"
@@ -247,6 +246,7 @@
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="@+id/card_img_background_vertical_left_guideline"
         app:layout_constraintTop_toTopOf="@+id/word_audio_top_guideline"
+        app:shapeAppearanceOverlay="@style/round_image_30"
         app:srcCompat="@drawable/word_audio" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -479,7 +479,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.83994526" />
+        app:layout_constraintGuide_percent="0.87" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/card_background_vertical_left_guideline"
@@ -540,21 +540,19 @@
         app:layout_constraintGuide_percent="0.98"/>
 
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/letter_chooser_horizontal_top_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6"/>
+        app:layout_constraintGuide_percent="0.58" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/letter_chooser_bottom_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.7"/>
-
+        app:layout_constraintGuide_percent="0.76" />
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -562,14 +560,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.73"/>
+        app:layout_constraintGuide_percent="0.77" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/word_audio_bottom_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.82" />
+        app:layout_constraintGuide_percent="0.85" />
 
 
     <androidx.constraintlayout.widget.Guideline
