@@ -105,7 +105,6 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
             double topicProgress = ((double) memoryFactorSum) / (allTopicWords.size()*100);
             topicProgress*=100;
             topicProgresses.add((int)Math.round(topicProgress));
-            Log.d("UTAG", topicNames[i]+": "+memoryFactorSum+"; "+topicProgress);
         }
         double mainProgress = ((double) allTopicsMemoryFactorSum) / (numberOfAllWords*100);
         mainProgress*=100;

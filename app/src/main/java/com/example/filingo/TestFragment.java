@@ -158,7 +158,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     private void loseLife() {
         Toast.makeText(getContext(), "Your lose one life", Toast.LENGTH_LONG).show();
-        Log.d("TAG", "Wrong answer. - heart");
         lives--;
         if(lives==2) heartThird.setVisibility(View.GONE);
         if(lives==1) heartSecond.setVisibility(View.GONE);
@@ -572,11 +571,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     private void launchWordsForLearningDemonstration(String topicName) {
         PriorityQueue<Word> pqAllWord = TestRepository.getWordsByTopic(topicNameToTopicNumber(topicName));
-        // Debug
-        for(Word w: pqAllWord) {
-            Log.d("UTAG", ""+w.english+": "+w.memoryFactor);
-        }
-        // Debug
 
         allTopicWords = new ArrayList<>(pqAllWord.size());; // create by copying, need them to get random answer options
         while (!pqAllWord.isEmpty()) {
@@ -605,7 +599,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             if(currentTestWords.size()>0) { // we can't have 4 word, we need do test with what we can
                 startTesting();
             } else {
-                Log.d("TAG", "No word to demonstrate. You learn every word");
                 Toast.makeText(getContext(), "You have learnt all words form this topic", Toast.LENGTH_SHORT).show();
                 ((MainActivity)getActivity()).displayMainInfoFragment();
             }
@@ -632,7 +625,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                     wordTranslateOnChooseScreen.setText(demonstrationWords.get(0).ukrainian.get(0));
                     //setTestImage(demonstrationWords.get(0).imageUrl);
                 } else {
-                    Log.d("TAG", "All words have been demonstrated. Start new cycle");
                     launchWordsForLearningDemonstration(topicName);
                 }
             }
@@ -692,7 +684,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     private void startTesting() {
         for(Word word : currentTestWords) {
-            Log.d("TAG", "You will learn: "+word.english);
             word.memoryFactor+=POINTS_FOR_TESTING;
         }
         numberOfTestToEndTesting=currentTestWords.size()*3; // 3 test for each word
@@ -814,23 +805,32 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             public void onClick(View view) {
                 MediaPlayer player = new MediaPlayer();
                 String wordText = currentWord.english;
-                wordText.replaceAll("", "%20");
+                wordText=wordText.replaceAll(" ", "%20");
                 try {
                     player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     String dataSourceStr = "https://ssl.gstatic.com/dictionary/static/sounds/20200429/"+wordText+"--_gb_1.mp3";
                     player.setDataSource(dataSourceStr);
-                    player.prepare();
-                    player.start();
+                    player.prepareAsync();
+                    player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer player) {player.start();}
+                    });
                 } catch (Exception ex) {
                     // try another audio
+                    ex.printStackTrace();
+                    Log.d("TAG", "first audio isn't working");
                     try {
                         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         String dataSourceStr = "https://api.dictionaryapi.dev/media/pronunciations/en/"+wordText+"-us.mp3";
                         player.setDataSource(dataSourceStr);
-                        player.prepare();
-                        player.start();
+                        player.prepareAsync();
+                        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer player) {player.start();}
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.d("TAG", "second audio isn't working");
                         Toast.makeText(getContext(), "This word haven't got audio or you have no connection", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -844,9 +844,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                     if (testType==0)
                         Toast.makeText(getContext(), "All letters must be selected", Toast.LENGTH_SHORT).show();
                     else
-                        Toast.makeText(getContext(), "Chose something", Toast.LENGTH_SHORT).show();
-                    Log.d("TAG", "Chose some option to go further");
-                    return;
+                        Toast.makeText(getContext(), "Chose something", Toast.LENGTH_SHORT).show();return;
                 }
                 if(numberOfTestToEndTesting>0) {
                     int nextTestType = testKeys.get(numberOfTestToEndTesting-1)/currentTestWords.size();
