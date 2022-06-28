@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -61,10 +62,20 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
         return fragment;
     }
 
+    public final Observer<List<Word>> observer = words -> {
+        UpdateUi();
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.main_frame_info, container, false);
         thiscontext = container.getContext();
+        TestRepository.update(observer, this);
+        return rootView;
+    }
+
+    public void UpdateUi(){
+
         SharedPreferences sharedPreferences = thiscontext.getSharedPreferences(MainActivity.SHARED_PREFS,Context.MODE_PRIVATE);
 
         String ICN_URI = sharedPreferences.getString(StartFragment.ICN_URI,"");
@@ -143,7 +154,7 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
             }
         });
 
-        return rootView;
+
     }
 
 

@@ -1,19 +1,17 @@
 package com.example.filingo;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.filingo.database.TestRepository;
-import com.example.filingo.database.Word;
-
-import java.util.PriorityQueue;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -112,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.main_test_result, testResultFragment).hide(testFragment).commit();
     }
 }
+
 
 
 

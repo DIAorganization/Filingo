@@ -49,7 +49,7 @@ public class TensesInfo extends Fragment implements TenseAdapter.OnTenseClicked{
         tensesRecycler = rootView.findViewById(R.id.tenses_chooser);
 
         listOfTenses.add("Present Simple");
-        listOfTenses.add("Present Continuous");
+        listOfTenses.add("Present Continious");
         listOfTenses.add("Present Perfect");
         listOfTenses.add("Present Perfect Continuous");
         listOfTenses.add("Past Simple");

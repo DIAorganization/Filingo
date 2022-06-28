@@ -24,6 +24,10 @@ public abstract class TestRepository {
         allWordsList.addAll(words);
     };
 
+    public static void update(Observer lis , LifecycleOwner lf){
+        allWords.observe(lf,lis);
+    }
+
 
     /*Need application context from getApplicationContext() to init db.
     Has to be initialized BEFORE STARTED state of app to work correctly.
@@ -33,6 +37,7 @@ public abstract class TestRepository {
         dao = WordDatabase.getDatabase(application).wordDao();
         allWords = dao.getAll();
         allWords.observeForever(observer);
+
     }
 
     private static void insert(Word word){
