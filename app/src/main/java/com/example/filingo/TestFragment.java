@@ -662,13 +662,24 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     private void setTestImage(String imageFileName) {
         try
         {
+            // filter to cut off incorrect names
+            for(int i=0; i<imageFileName.length(); i++) {
+                if(imageFileName.charAt(i)==' ') {
+                    if(i!=imageFileName.length()-5) { //"name .jpg"
+                        imageFileName=imageFileName.replaceFirst(" ", "_");
+                    }
+                    break;
+                }
+            }
+            imageFileName = imageFileName.replaceAll(" ", "");
+
             // get input stream
             InputStream ims = getActivity().getAssets().open("images/"+imageFileName);
             // load image as Drawable
             Drawable d = Drawable.createFromStream(ims, null);
             // set image to ImageView
             wordImg.setImageDrawable(d);
-            ims .close();
+            ims.close();
         }
         catch(IOException e)
         {
