@@ -1,6 +1,7 @@
 package com.example.filingo.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,7 @@ public class LetterAdapter extends RecyclerView.Adapter<LetterAdapter.LetterView
     @Override
     public void onBindViewHolder(@NonNull final LetterViewHolder holder, int position) {
         holder.letter.setText( letterList.get(position) + "");
+        super.onViewRecycled(holder);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

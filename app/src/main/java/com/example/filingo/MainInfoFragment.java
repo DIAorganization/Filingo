@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
@@ -166,6 +167,10 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
 
     @Override
     public void OnTopicClicked(Topic topic) {
-        ((MainActivity)getActivity()).displayTestFragment(topic.topicName);
+        if(topic.topicProgress<100) {
+            ((MainActivity)getActivity()).displayTestFragment(topic.topicName);
+        } else {
+            Toast.makeText(getContext(),"You have max progress in this topic", Toast.LENGTH_SHORT).show();
+        }
     }
 }

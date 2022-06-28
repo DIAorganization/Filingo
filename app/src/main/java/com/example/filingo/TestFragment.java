@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -36,6 +37,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TestFragment extends Fragment implements LetterAdapter.OnLetterClicked{
 
@@ -59,6 +62,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     private static boolean isDecisionMade; // to check if we go to the next test
     private static String currentWordEnglish;
     private static boolean isUnskippableAnimationRunning;
+
+    private RecyclerView.OnScrollListener letterRecyclerScrollListener;
 
 
     TextView testTopicName; // topic_name;
@@ -116,6 +121,20 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         isDecisionMade=false;
         lives = START_LIVES;
         testKeys=null;
+        letterRecyclerScrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                for (int childCount = letterRecycler.getChildCount(), i = 0; i < childCount; ++i) {
+                    final RecyclerView.ViewHolder holder = letterRecycler.getChildViewHolder(letterRecycler.getChildAt(i));
+                    if(wordChosenByLetters.equals(currentWordEnglish))
+                        holder.itemView.findViewById(R.id.card_view_of_letter_item).setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                    else
+                        holder.itemView.findViewById(R.id.card_view_of_letter_item).setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                }
+
+            }
+        };
         if(!topicName.equals(MainActivity.KEY_FOR_GRAMMAR_TEST)){
             launchTesting(topicName);
         }else{
@@ -156,6 +175,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         letterRecycler.setLayoutManager(layoutManager);
         letterAdapter = new LetterAdapter(thiscontext, listOfLetters, TestFragment.this);
         letterRecycler.setAdapter(letterAdapter);
+        letterRecycler.removeOnScrollListener(letterRecyclerScrollListener);
         AudioTestFrameEnEn();
     }
 
@@ -528,6 +548,9 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 else
                     holder.itemView.findViewById(R.id.card_view_of_letter_item).setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
             }
+
+            letterRecycler.addOnScrollListener(letterRecyclerScrollListener);
+
         }
     }
 
@@ -703,7 +726,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         setChosenAnswer(-1, true);
         wordChosenByLetters = "";
 
-        if(numberOfTestToEndTesting==currentTestWords.size()-1) { // set for first image, animation will do it for others
+        if(numberOfTestToEndTesting==(currentTestWords.size()*3)-1) { // set for first image, animation will do it for others
             setTestImage(currentWord.imageUrl);
         }
         switch (testType) {
@@ -779,9 +802,11 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             @Override
             public void onClick(View view) {
                 MediaPlayer player = new MediaPlayer();
+                String wordText = currentWord.english;
+                wordText.replaceAll("", "%20");
                 try {
                     player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    String dataSourceStr = "https://ssl.gstatic.com/dictionary/static/sounds/20200429/"+currentWord.english+"--_gb_1.mp3";
+                    String dataSourceStr = "https://ssl.gstatic.com/dictionary/static/sounds/20200429/"+wordText+"--_gb_1.mp3";
                     player.setDataSource(dataSourceStr);
                     player.prepare();
                     player.start();
@@ -789,7 +814,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                     // try another audio
                     try {
                         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        String dataSourceStr = "https://api.dictionaryapi.dev/media/pronunciations/en/"+currentWord.english+"-us.mp3";
+                        String dataSourceStr = "https://api.dictionaryapi.dev/media/pronunciations/en/"+wordText+"-us.mp3";
                         player.setDataSource(dataSourceStr);
                         player.prepare();
                         player.start();
