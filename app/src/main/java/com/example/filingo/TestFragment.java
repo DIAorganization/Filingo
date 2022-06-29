@@ -99,6 +99,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     AppCompatButton answerButtonTopFourth; // answer_button_top_4;
     TextView wordValueOnTestScreen; // test_word_value;
 
+    Toast mToast;
+
     LetterAdapter letterAdapter;
 
     ShapeableImageView bonusIcon;
@@ -208,7 +210,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     private void setChosenAnswer(int answer, boolean isCorrect) {
         if(isDecisionMade) {
-            Toast.makeText(getContext(), "You can't change your answer", Toast.LENGTH_SHORT).show();
+            showToastMessageOneAtTime("You can't change your answer");
             return; // Can't reselect answer
         }
 
@@ -444,7 +446,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                     addLife();
                     view.setVisibility(View.GONE);
                 }else if (lives == 3){
-                    Toast.makeText(getContext(), "You have all lives", Toast.LENGTH_LONG).show();
+                    showToastMessageOneAtTime("You have all lives");
                 }
 
                 if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
@@ -883,9 +885,10 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                     MainActivity.getRandomMediaPlayer().start();
                 if(!isDecisionMade) {
                     if (testType==0)
-                        Toast.makeText(getContext(), "All letters must be selected", Toast.LENGTH_SHORT).show();
+                        showToastMessageOneAtTime("All letters must be selected");
                     else
-                        Toast.makeText(getContext(), "Chose something", Toast.LENGTH_SHORT).show();return;
+                        showToastMessageOneAtTime("Chose something");
+                    return;
                 }
                 if(numberOfTestToEndTesting>0) {
                     int nextTestType = testKeys.get(numberOfTestToEndTesting-1)/currentTestWords.size();
@@ -1016,5 +1019,11 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         long delay = timeout;
         if(url2!=null) delay/=2;
         timer.schedule(task, delay);
+    }
+
+    private void showToastMessageOneAtTime(String message) {
+        if(mToast!=null) mToast.cancel();
+        mToast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 }
