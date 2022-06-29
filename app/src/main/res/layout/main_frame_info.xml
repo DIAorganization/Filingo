@@ -235,7 +235,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="14sp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/bottom_menu_background"
         app:layout_constraintEnd_toStartOf="@+id/main_frame_random_test_button"
         app:layout_constraintStart_toEndOf="@+id/main_frame_grammar_info_button"

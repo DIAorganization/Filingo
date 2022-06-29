@@ -204,17 +204,18 @@
         android:id="@+id/bonus_icn_test"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/white"
         android:scaleType="centerCrop"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/heart_icn_horizontal_bottom_guideline"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/card_background_vertical_right_guideline"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/card_img_background_vertical_right_guideline"
-        app:layout_constraintTop_toTopOf="@+id/heart_icn_horizontal_top_guideline"
+        app:layout_constraintTop_toTopOf="@+id/bonus_icn_horizontal_top_guideline"
         app:layout_constraintVertical_bias="0.0"
-        app:shapeAppearanceOverlay="@style/round_image_8"
-        app:srcCompat="@drawable/bonus_icn" />
-
+        app:shapeAppearanceOverlay="@style/round_image_10"
+        app:srcCompat="@drawable/bonus_icn_test" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/next_button"
@@ -531,6 +532,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/bonus_icn_horizontal_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.93" />
+
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/heart_icn_horizontal_bottom_guideline"

@@ -132,7 +132,10 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
         learnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
                 ((MainActivity)getActivity()).displayTensesInfo();
+
             }
         });
 
@@ -140,7 +143,10 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
         grammarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
                 ((MainActivity)getActivity()).displayTestFragment(MainActivity.KEY_FOR_GRAMMAR_TEST);
+
             }
         });
 
@@ -148,9 +154,12 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
         randomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
                 Random random = new Random();
                 int index = random.nextInt(listOfTopics.size());
                 ((MainActivity)getActivity()).displayTestFragment(listOfTopics.get(index).topicName);
+
             }
         });
 

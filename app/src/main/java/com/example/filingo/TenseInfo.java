@@ -39,8 +39,6 @@ public class TenseInfo extends Fragment{
 
                 //Need to Add some info for each tense
                 tenseInfoText.setText(TensesInfo.listOfTenses.get(tenseNamePos));
-                //Uri imgUri = Uri.parse("file:///res/drawable/" + TensesInfo.listOfTenses.get(tenseNamePos) + ".jpg");
-                Uri imgUri = Uri.parse("file:///data/data/assets/grammar_info/" + TensesInfo.listOfTenses.get(tenseNamePos) + ".jpg");
 
                 // get input stream
                 InputStream ims = null;

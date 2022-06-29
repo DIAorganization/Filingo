@@ -49,6 +49,8 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
                 int pos = holder.getAdapterPosition();
                 mListener.OnTopicClicked(topicList.get(pos));
             }

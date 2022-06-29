@@ -53,8 +53,8 @@ public class LetterAdapter extends RecyclerView.Adapter<LetterAdapter.LetterView
                 int pos = holder.getAdapterPosition();
                 //   if(lastSelected != null)
                 //     ((CardView) lastSelected.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.backgroud_for_buttons));
-                ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.light_gray));
-
+                ((CardView) view.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.light_gray));
+                holder.wasChosen = true;
                 mListener.OnLetterClicked(pos);
                 lastSelected = holder.itemView;
             }
@@ -74,6 +74,7 @@ public class LetterAdapter extends RecyclerView.Adapter<LetterAdapter.LetterView
 
     public static final class LetterViewHolder extends RecyclerView.ViewHolder{
         TextView letter;
+        public boolean wasChosen;
         public LetterViewHolder(@NonNull View itemView) {
             super(itemView);
             letter = itemView.findViewById(R.id.letter);

@@ -1,6 +1,7 @@
 package com.example.filingo;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+
+import java.util.Random;
 
 public class TestResultFragment extends Fragment {
 
@@ -57,6 +61,8 @@ public class TestResultFragment extends Fragment {
         againButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
                ((MainActivity)getActivity()).displayTestFragment(topicName);
             }
         });
@@ -64,13 +70,30 @@ public class TestResultFragment extends Fragment {
         exitTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
                ((MainActivity)getActivity()).displayMainInfoFragment();
             }
         });
 
-        testProgressTextView.setText("Test has been PASSED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWordsSize*3));
-        if(lives<=0)
+
+        if(lives<=0){
+            MainActivity.falseSound.start();
             testProgressTextView.setText("Test has been FAILED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWordsSize*3));
+        }else{
+            Random random = new Random();
+            if(random.nextInt(100) < 90){
+                Toast.makeText(getContext(), "You win bonus!", Toast.LENGTH_SHORT).show();
+                TestFragment.numberOfBonuses ++;
+                SharedPreferences sharedPreferences = thiscontext.getSharedPreferences(MainActivity.SHARED_PREFS,Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(MainActivity.BONUS_NUMBER,TestFragment.numberOfBonuses);
+                editor.apply();
+            }
+            MainActivity.trueSound.start();
+            testProgressTextView.setText("Test has been PASSED\nYour Progress: " + numberOfRightAnswers+"/"+(currentTestWordsSize*3));
+        }
+
         double progress = numberOfRightAnswers/(currentTestWordsSize*3.);
         testProgressBar.setProgress((int)(100 * progress));
 

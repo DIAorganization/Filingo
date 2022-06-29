@@ -1,6 +1,8 @@
 package com.example.filingo;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,6 +66,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     private static boolean isDecisionMade; // to check if we go to the next test
     private static String currentWordEnglish;
     private static boolean isUnskippableAnimationRunning;
+    public static Integer numberOfBonuses = 1;
 
     private RecyclerView.OnScrollListener letterRecyclerScrollListener;
 
@@ -125,12 +130,22 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                for (int childCount = letterRecycler.getChildCount(), i = 0; i < childCount; ++i) {
-                    final RecyclerView.ViewHolder holder = letterRecycler.getChildViewHolder(letterRecycler.getChildAt(i));
-                    if(wordChosenByLetters.equals(currentWordEnglish))
-                        holder.itemView.findViewById(R.id.card_view_of_letter_item).setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
-                    else
-                        holder.itemView.findViewById(R.id.card_view_of_letter_item).setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                if(isDecisionMade) {
+                    for (int childCount = letterRecycler.getChildCount(), i = 0; i < childCount; ++i) {
+                        final LetterAdapter.LetterViewHolder holder = (LetterAdapter.LetterViewHolder) letterRecycler.getChildViewHolder(letterRecycler.getChildAt(i));
+                        if (wordChosenByLetters.equals(currentWordEnglish))
+                            holder.itemView.findViewById(R.id.card_view_of_letter_item).setBackground(getResources().getDrawable(R.drawable.right_test_button_background));
+                        else
+                            holder.itemView.findViewById(R.id.card_view_of_letter_item).setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
+                    }
+                }else{
+                    for (int childCount = letterRecycler.getChildCount(), i = 0; i < childCount; ++i) {
+                        final LetterAdapter.LetterViewHolder holder = (LetterAdapter.LetterViewHolder) letterRecycler.getChildViewHolder(letterRecycler.getChildAt(i));
+                        if (holder.wasChosen)
+                            ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(getResources().getColor(R.color.light_gray));
+                        else
+                            ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(getResources().getColor(R.color.backgroud_for_buttons));
+                    }
                 }
 
             }
@@ -157,10 +172,18 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     }
 
     private void loseLife() {
-        Toast.makeText(getContext(), "Your lose one life", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "You lose one life", Toast.LENGTH_LONG).show();
         lives--;
         if(lives==2) heartThird.setVisibility(View.GONE);
         if(lives==1) heartSecond.setVisibility(View.GONE);
+    }
+
+    private void addLife() {
+        Toast.makeText(getContext(), "You use Bonus", Toast.LENGTH_LONG).show();
+        lives++;
+        if(lives==3) heartThird.setVisibility(View.VISIBLE);
+        if(lives==2) heartSecond.setVisibility(View.VISIBLE);
+        if(lives==1) heartFirst.setVisibility(View.VISIBLE);
     }
 
     private void setLetterChooser(String word) {
@@ -174,7 +197,10 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         letterRecycler.setLayoutManager(layoutManager);
         letterAdapter = new LetterAdapter(thiscontext, listOfLetters, TestFragment.this);
         letterRecycler.setAdapter(letterAdapter);
+
+
         letterRecycler.removeOnScrollListener(letterRecyclerScrollListener);
+        letterRecycler.addOnScrollListener(letterRecyclerScrollListener);
         AudioTestFrameEnEn();
     }
 
@@ -401,6 +427,29 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         answerButtonTopThird = rootView.findViewById(R.id.answer_button_top_3);
         answerButtonTopFourth = rootView.findViewById(R.id.answer_button_top_4);
         wordValueOnTestScreen = rootView.findViewById(R.id.test_word_value);
+
+
+
+        bonusIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(lives < 3){
+                    SharedPreferences sharedPreferences = thiscontext.getSharedPreferences(MainActivity.SHARED_PREFS,Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    numberOfBonuses--;
+                    editor.putInt(MainActivity.BONUS_NUMBER,numberOfBonuses);
+                    editor.apply();
+                    addLife();
+                    view.setVisibility(View.GONE);
+                }else if (lives == 3){
+                    Toast.makeText(getContext(), "You have all lives", Toast.LENGTH_LONG).show();
+                }
+
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
+            }
+        });
+
     }
 
     public void ChooseWord(){
@@ -413,7 +462,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         heartFirst.setVisibility(View.GONE);
         heartSecond.setVisibility(View.GONE);
         heartThird.setVisibility(View.GONE);
-        bonusIcon.setVisibility(View.GONE);
         nextButton.setVisibility(View.GONE);
         wordAudioImgButton.setVisibility(View.GONE);
         letterRecycler.setVisibility(View.GONE);
@@ -427,6 +475,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         answerButtonTopThird.setVisibility(View.GONE);
         answerButtonTopFourth.setVisibility(View.GONE);
         wordValueOnTestScreen.setVisibility(View.GONE);
+        bonusIcon.setVisibility(View.GONE);
     }
 
     private void hideTestUI() {
@@ -457,7 +506,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         //heartFirst.setVisibility(View.VISIBLE);
         //heartSecond.setVisibility(View.VISIBLE);
         //heartThird.setVisibility(View.VISIBLE);
-        bonusIcon.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         wordAudioImgButton.setVisibility(View.VISIBLE);
         letterRecycler.setVisibility(View.VISIBLE);
@@ -471,6 +519,11 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         answerButtonTopThird.setVisibility(View.GONE);
         answerButtonTopFourth.setVisibility(View.GONE);
         wordValueOnTestScreen.setVisibility(View.GONE);
+
+        if(numberOfBonuses == 0)
+            bonusIcon.setVisibility(View.GONE);
+        else
+            bonusIcon.setVisibility(View.VISIBLE);
     }
 
 
@@ -485,7 +538,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         //heartFirst.setVisibility(View.VISIBLE);
         //heartSecond.setVisibility(View.VISIBLE);
         //heartThird.setVisibility(View.VISIBLE);
-        bonusIcon.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         wordAudioImgButton.setVisibility(View.GONE);
         letterRecycler.setVisibility(View.GONE);
@@ -499,6 +551,11 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         answerButtonTopThird.setVisibility(View.GONE);
         answerButtonTopFourth.setVisibility(View.GONE);
         wordValueOnTestScreen.setVisibility(View.GONE);
+
+        if(numberOfBonuses == 0)
+            bonusIcon.setVisibility(View.GONE);
+        else
+            bonusIcon.setVisibility(View.VISIBLE);
     }
 
     public void TranslateTestFrameEnUa(){
@@ -512,7 +569,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         //heartFirst.setVisibility(View.VISIBLE);
         //heartSecond.setVisibility(View.VISIBLE);
         //heartThird.setVisibility(View.VISIBLE);
-        bonusIcon.setVisibility(View.VISIBLE);
         nextButton.setVisibility(View.VISIBLE);
         wordAudioImgButton.setVisibility(View.VISIBLE);
         letterRecycler.setVisibility(View.GONE);
@@ -526,6 +582,11 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         answerButtonTopThird.setVisibility(View.VISIBLE);
         answerButtonTopFourth.setVisibility(View.VISIBLE);
         wordValueOnTestScreen.setVisibility(View.VISIBLE);
+
+        if(numberOfBonuses == 0)
+            bonusIcon.setVisibility(View.GONE);
+        else
+            bonusIcon.setVisibility(View.VISIBLE);
     }
 
 
@@ -547,9 +608,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 else
                     holder.itemView.findViewById(R.id.card_view_of_letter_item).setBackground(getResources().getDrawable(R.drawable.wrong_test_button_background));
             }
-
-            letterRecycler.addOnScrollListener(letterRecyclerScrollListener);
-
         }
     }
 
@@ -614,6 +672,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         knowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
                 if(isUnskippableAnimationRunning) return; // wait till animation ends
                 if(demonstrationWords.size()>1)
                     launchAnimation(true, true, true, demonstrationWords.get(1).imageUrl);
@@ -631,8 +691,11 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         });
 
         learnButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
                 if(isUnskippableAnimationRunning) return; // wait till animation ends
                 if(demonstrationWords.size()>1 && currentTestWords.size()<3)
                     launchAnimation(false, true, true, demonstrationWords.get(1).imageUrl);
@@ -840,6 +903,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
                 if(!isDecisionMade) {
                     if (testType==0)
                         Toast.makeText(getContext(), "All letters must be selected", Toast.LENGTH_SHORT).show();

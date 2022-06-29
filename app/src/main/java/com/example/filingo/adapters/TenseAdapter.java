@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.filingo.MainActivity;
 import com.example.filingo.R;
 
 import java.util.List;
@@ -40,6 +41,8 @@ public class TenseAdapter extends RecyclerView.Adapter<TenseAdapter.TenseViewHol
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
+                    MainActivity.getRandomMediaPlayer().start();
                 int pos = holder.getAdapterPosition();
                 mListener.OnTenseClicked(pos);
             }
