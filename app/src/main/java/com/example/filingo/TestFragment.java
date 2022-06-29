@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -866,37 +868,11 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         wordAudioImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MediaPlayer player = new MediaPlayer();
                 String wordText = currentWord.english;
                 wordText=wordText.replaceAll(" ", "%20");
-                try {
-                    player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    String dataSourceStr = "https://ssl.gstatic.com/dictionary/static/sounds/20200429/"+wordText+"--_gb_1.mp3";
-                    player.setDataSource(dataSourceStr);
-                    player.prepareAsync();
-                    player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer player) {player.start();}
-                    });
-                } catch (Exception ex) {
-                    // try another audio
-                    ex.printStackTrace();
-                    Log.d("TAG", "first audio isn't working");
-                    try {
-                        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        String dataSourceStr = "https://api.dictionaryapi.dev/media/pronunciations/en/"+wordText+"-us.mp3";
-                        player.setDataSource(dataSourceStr);
-                        player.prepareAsync();
-                        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer player) {player.start();}
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.d("TAG", "second audio isn't working");
-                        Toast.makeText(getContext(), "This word haven't got audio or you have no connection", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                String dataSourceStr1 = "https://ssl.gstatic.com/dictionary/static/sounds/20200429/\"+wordText+\"--_gb_1.mp3";
+                String dataSourceStr2 = "https://api.dictionaryapi.dev/media/pronunciations/en/"+wordText+"-us.mp3";
+                playAudioWithURL(dataSourceStr1, dataSourceStr2, 3500);
             }
         });
 
@@ -1003,5 +979,42 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 }
             }
         });
+    }
+
+    private void playAudioWithURL(String url, String url2, int timeout) {
+        MediaPlayer player = new MediaPlayer();
+        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            player.setDataSource(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        player.prepareAsync();
+        final boolean[] wasPlayed = {false};
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer player) {
+                player.start();
+                wasPlayed[0] = true;
+            }
+        });
+        TimerTask task = new TimerTask() {
+            public void run() {
+                if(!player.isPlaying() && !wasPlayed[0]) {
+                    player.release();
+                    if(url2!=null) playAudioWithURL(url2, null, timeout /2);
+                    else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getActivity(), "This word have no audio or you have no connection", Toast.LENGTH_SHORT).show();
+                            }
+                        });                    }
+                }
+            }
+        };
+        Timer timer = new Timer();
+        long delay = timeout;
+        if(url2!=null) delay/=2;
+        timer.schedule(task, delay);
     }
 }
