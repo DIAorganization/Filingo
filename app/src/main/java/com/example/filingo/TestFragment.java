@@ -31,6 +31,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.filingo.adapters.LetterAdapter;
+import com.example.filingo.api.APIResponse;
+import com.example.filingo.api.OnFetchDataListener;
+import com.example.filingo.api.RequestManager;
 import com.example.filingo.database.TestRepository;
 import com.example.filingo.database.Word;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -39,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
@@ -71,6 +75,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     public static Integer numberOfBonuses = 1;
 
     private RecyclerView.OnScrollListener letterRecyclerScrollListener;
+
+    private static HashMap<String,MediaPlayer> wordAudioPlayers = new HashMap<>();
 
 
     TextView testTopicName; // topic_name;
@@ -125,6 +131,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         thiscontext = container.getContext();
         isUnskippableAnimationRunning=false;
         currentTestWords.clear();
+        wordAudioPlayers.clear();
         chosenAnswer = -1;
         currentWordEnglish="";
         isDecisionMade=false;
@@ -620,6 +627,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         setTestFragment();
         testTopicName.setText(testingTopic);
         currentTestWords.clear();
+        wordAudioPlayers.clear();
         ChooseWord();
         launchWordsForLearningDemonstration(testingTopic);
     }
@@ -703,7 +711,11 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 if(isUnskippableAnimationRunning) return; // wait till animation ends
                 if(demonstrationWords.size()>1 && currentTestWords.size()<3)
                     launchAnimation(false, true, true, demonstrationWords.get(1).imageUrl);
+
+                // Add word and prepare audio
                 currentTestWords.add(demonstrationWords.get(0));
+                loadAudioForWord(demonstrationWords.get(0).english);
+
                 demonstrationWords.remove(0);
                 if(currentTestWords.size()>3) {
                     startTesting();
@@ -753,6 +765,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         for(Word word : currentTestWords) {
             word.memoryFactor+=POINTS_FOR_TESTING;
         }
+
         numberOfTestToEndTesting=currentTestWords.size()*3; // 3 test for each word
         testKeys = new ArrayList<>();
         for(int i=0; i<numberOfTestToEndTesting; i++) testKeys.add(i);
@@ -871,10 +884,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             @Override
             public void onClick(View view) {
                 String wordText = currentWord.english;
-                wordText=wordText.replaceAll(" ", "%20");
-                String dataSourceStr1 = "https://ssl.gstatic.com/dictionary/static/sounds/20200429/\"+wordText+\"--_gb_1.mp3";
-                String dataSourceStr2 = "https://api.dictionaryapi.dev/media/pronunciations/en/"+wordText+"-us.mp3";
-                playAudioWithURL(dataSourceStr1, dataSourceStr2, 3500);
+                playAudio(wordText);
             }
         });
 
@@ -984,42 +994,54 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         });
     }
 
-    private void playAudioWithURL(String url, String url2, int timeout) {
-        MediaPlayer player = new MediaPlayer();
-        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            player.setDataSource(url);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void playAudio(String wordText) {
+        Log.d("TAG", "f: "+wordAudioPlayers.size());
+        if(wordAudioPlayers.keySet().contains(wordText)) {
+            wordAudioPlayers.get(wordText).start();
+        } else {
+            showToastMessageOneAtTime("No Internet or this word have no audio");
         }
-        player.prepareAsync();
-        final boolean[] wasPlayed = {false};
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer player) {
-                player.start();
-                wasPlayed[0] = true;
-            }
-        });
-        TimerTask task = new TimerTask() {
-            public void run() {
-                if(!player.isPlaying() && !wasPlayed[0]) {
-                    player.release();
-                    if(url2!=null) playAudioWithURL(url2, null, timeout /2);
-                    else {
-                        getActivity().runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(getActivity(), "This word have no audio or you have no connection", Toast.LENGTH_SHORT).show();
-                            }
-                        });                    }
-                }
-            }
-        };
-        Timer timer = new Timer();
-        long delay = timeout;
-        if(url2!=null) delay/=2;
-        timer.schedule(task, delay);
     }
+
+    private void loadAudioForWord(String word) {
+        RequestManager manager = new RequestManager();
+        Log.d("TAG", ":loading: "+word);
+        manager.getWordMeaning(listener, word);
+        // On Fetch DataListener automatically set media player
+    }
+
+    private final OnFetchDataListener listener = new OnFetchDataListener() {
+        @Override
+        public void onFetchData(APIResponse apiResponse, String message) {
+            if(apiResponse==null) {
+                Log.d("TAG", "No api response");
+                return;
+            }
+            MediaPlayer player = new MediaPlayer();
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            try {
+                String word = apiResponse.word;
+                String audioUrl = apiResponse.phonetics.get(0).audio;
+                if(audioUrl==null || audioUrl.equals("")) throw new Exception("No audio");
+                player.setDataSource(audioUrl);
+                player.prepareAsync();
+                player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                        wordAudioPlayers.put(word, player);
+                    }
+                });
+            }catch (Exception e) {
+                e.printStackTrace();
+                Log.d("TAG", "Loading audio error");
+            }
+        }
+
+        @Override
+        public void onError(String message) {
+            Log.d("TAG", "API error");
+        }
+    };
 
     private void showToastMessageOneAtTime(String message) {
         if(mToast!=null) mToast.cancel();
