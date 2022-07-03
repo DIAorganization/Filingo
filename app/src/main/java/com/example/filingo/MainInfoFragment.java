@@ -112,12 +112,12 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
         mainProgressBar.setProgress((int)(Math.round(mainProgress)));
 
         //set default topics names and icons
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[0], topicProgresses.get(0)));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[1], topicProgresses.get(1)));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[2], topicProgresses.get(2)));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[3], topicProgresses.get(3)));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[4], topicProgresses.get(4)));
-        listOfTopics.add(new Topic(R.drawable.hardware_icn, topicNames[5], topicProgresses.get(5)));
+        listOfTopics.add(new Topic(R.drawable.family_topic, topicNames[0], topicProgresses.get(0)));
+        listOfTopics.add(new Topic(R.drawable.traits_topic, topicNames[1], topicProgresses.get(1)));
+        listOfTopics.add(new Topic(R.drawable.food_topic, topicNames[2], topicProgresses.get(2)));
+        listOfTopics.add(new Topic(R.drawable.bodyparts_topic, topicNames[3], topicProgresses.get(3)));
+        listOfTopics.add(new Topic(R.drawable.accomodation_topic, topicNames[4], topicProgresses.get(4)));
+        listOfTopics.add(new Topic(R.drawable.travelling_topic, topicNames[5], topicProgresses.get(5)));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(thiscontext, RecyclerView.VERTICAL, false);
         topicRecycler.setLayoutManager(layoutManager);
