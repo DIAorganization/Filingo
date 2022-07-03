@@ -103,11 +103,11 @@
 
     <TextView
         android:id="@+id/test_fragment_test_number"
-        android:layout_width="57dp"
+        android:layout_width="66dp"
         android:layout_height="32dp"
         android:fontFamily="sans-serif"
         android:includeFontPadding="false"
-        android:letterSpacing="0.1"
+        android:letterSpacing="0.05"
         android:text="4/12"
         android:textColor="@color/white"
         android:textSize="18sp"

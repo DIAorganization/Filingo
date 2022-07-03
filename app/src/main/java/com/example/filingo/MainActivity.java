@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     public TestResultFragment testResultFragment;
 
 
-
     public FragmentManager fragmentManager;
 
     @Override
@@ -99,8 +98,9 @@ public class MainActivity extends AppCompatActivity {
         mainInfoFragment = MainInfoFragment.newInstance();
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if(startFragment!= null)
+        if(startFragment!= null && !startFragment.isHidden()){
             fragmentTransaction.replace(R.id.main_frame_info_fragment, mainInfoFragment).show(mainInfoFragment).hide(startFragment).commit();
+        }
         else if (testResultFragment!= null && !testResultFragment.isHidden())
             fragmentTransaction.replace(R.id.main_frame_info_fragment, mainInfoFragment).show(mainInfoFragment).hide(testResultFragment).commit();
         else
