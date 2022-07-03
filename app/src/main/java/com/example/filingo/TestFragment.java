@@ -152,10 +152,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 }else{
                     for (int childCount = letterRecycler.getChildCount(), i = 0; i < childCount; ++i) {
                         final LetterAdapter.LetterViewHolder holder = (LetterAdapter.LetterViewHolder) letterRecycler.getChildViewHolder(letterRecycler.getChildAt(i));
-                        if (holder.wasChosen)
-                            ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(getResources().getColor(R.color.light_gray));
-                        else
-                            ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(getResources().getColor(R.color.backgroud_for_buttons));
                     }
                 }
 

@@ -47,6 +47,10 @@ public class LetterAdapter extends RecyclerView.Adapter<LetterAdapter.LetterView
     public void onBindViewHolder(@NonNull final LetterViewHolder holder, int position) {
         holder.letter.setText( letterList.get(position) + "");
         super.onViewRecycled(holder);
+        ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.backgroud_for_buttons));
+        if(lettersAreChosen.get(position))
+            ((CardView) holder.itemView.findViewById(R.id.card_view_of_letter_item)).setCardBackgroundColor(context.getResources().getColor(R.color.light_gray));
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
