@@ -1,21 +1,16 @@
 package com.example.filingo;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -26,13 +21,11 @@ import com.example.filingo.adapters.Topic;
 import com.example.filingo.adapters.TopicAdapter;
 import com.example.filingo.database.TestRepository;
 import com.example.filingo.database.Word;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Random;
 
 public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicClicked {
@@ -71,7 +64,7 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.main_frame_info, container, false);
         thiscontext = container.getContext();
-        TestRepository.update(observer, this);
+        TestRepository.addDatabaseObserver(observer, this);
         return rootView;
     }
 

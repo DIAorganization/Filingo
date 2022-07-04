@@ -24,7 +24,7 @@ public abstract class TestRepository {
         allWordsList.addAll(words);
     };
 
-    public static void update(Observer lis , LifecycleOwner lf){
+    public static void addDatabaseObserver(Observer lis , LifecycleOwner lf){
         allWords.observe(lf,lis);
     }
 
@@ -38,10 +38,6 @@ public abstract class TestRepository {
         allWords = dao.getAll();
         allWords.observeForever(observer);
 
-    }
-
-    private static void insert(Word word){
-        WordDatabase.databaseWriteExecutor.execute(() -> dao.insert(word));
     }
 
     //IDE порекомендувала так зробити бо PriorityQueue тільки з цієї версії api(24)
