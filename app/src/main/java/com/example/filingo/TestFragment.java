@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.filingo.adapters.LetterAdapter;
 import com.example.filingo.api.APIResponse;
 import com.example.filingo.api.OnFetchDataListener;
+import com.example.filingo.api.Phonetic;
 import com.example.filingo.api.RequestManager;
 import com.example.filingo.database.TestRepository;
 import com.example.filingo.database.Word;
@@ -991,7 +992,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
     }
 
     private void playAudio(String wordText) {
-        Log.d("TAG", "f: "+wordAudioPlayers.size());
         if(wordAudioPlayers.keySet().contains(wordText)) {
             wordAudioPlayers.get(wordText).start();
         } else {
@@ -1001,7 +1001,6 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
 
     private void loadAudioForWord(String word) {
         RequestManager manager = new RequestManager();
-        Log.d("TAG", ":loading: "+word);
         manager.getWordMeaning(listener, word);
         // On Fetch DataListener automatically set media player
     }
@@ -1017,7 +1016,15 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             try {
                 String word = apiResponse.word;
-                String audioUrl = apiResponse.phonetics.get(0).audio;
+                String audioUrl = null;
+                for(Phonetic p: apiResponse.phonetics) {
+                    if(p!=null) {
+                        if(p.audio!=null && !p.audio.equals("")) {
+                            audioUrl = p.audio;
+                            break;
+                        }
+                    }
+                }
                 if(audioUrl==null || audioUrl.equals("")) throw new Exception("No audio");
                 player.setDataSource(audioUrl);
                 player.prepareAsync();
