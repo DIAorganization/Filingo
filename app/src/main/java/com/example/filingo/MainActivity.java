@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         tenseInfo = TenseInfo.newInstance(pos);
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.main_tense_info, tenseInfo).hide(tensesInfo).addToBackStack(null).commit();
+        fragmentTransaction.replace(R.id.main_tense_info, tenseInfo).hide(tensesInfo).hide(mainInfoFragment).addToBackStack(null).commit();
     }
 
     public void displayTestResult(String topicName, Integer lives, Integer numberOfRightAnswers, Integer currentTestWordsSize) {
