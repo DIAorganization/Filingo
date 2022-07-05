@@ -34,6 +34,7 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
     private Context thiscontext;
     private RecyclerView topicRecycler; // topic_chooser;
     private TopicAdapter topicAdapter; // tenses_chooser;
+    private ArrayList<Integer> topicProgresses = new ArrayList<>();
 
     public static String[] topicNames = {
             "Family",
@@ -86,7 +87,6 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
 
         int allTopicsMemoryFactorSum=0;
         int numberOfAllWords=0;
-        ArrayList<Integer> topicProgresses = new ArrayList<>();
         for(int i=0; i<topicNames.length; i++) {
             PriorityQueue<Word> allTopicWords = TestRepository.getWordsByTopic(i+1);
             int memoryFactorSum=0;
@@ -150,7 +150,20 @@ public class MainInfoFragment extends Fragment implements TopicAdapter.OnTopicCl
                 if(!MainActivity.mediaPlayerArrayList.get(0).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying() && !MainActivity.mediaPlayerArrayList.get(1).isPlaying())
                     MainActivity.getRandomMediaPlayer().start();
                 Random random = new Random();
+                for(int i=0; i<topicProgresses.size(); i++) {
+                    if(topicProgresses.get(i)<100) {
+                        break; // we have random unlearned topic
+                    }
+                    else if(i==topicProgresses.size()-1) {
+                        Toast.makeText(getContext(), "No topic to learn", Toast.LENGTH_SHORT); // we come to last topic, that mean we learn all
+                        return;
+                    }
+                }
                 int index = random.nextInt(listOfTopics.size());
+                // generate new, this topic is learend
+                while(topicProgresses.get(index)>=100)
+                    index = random.nextInt(listOfTopics.size());
+
                 ((MainActivity)getActivity()).displayTestFragment(listOfTopics.get(index).topicName);
 
             }

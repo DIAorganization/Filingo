@@ -651,8 +651,15 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
         Iterator<Word> itr = filteredWords.iterator();
         while (itr.hasNext()) {
             Word word = itr.next();
-            if (word.memoryFactor>=100 || currentTestWords.contains(word)) {
+            if (word.memoryFactor>=100) {
                 itr.remove();
+            } else {
+                for(Word w: currentTestWords) {
+                    if(w.english.equals(word)) {
+                        itr.remove();
+                        break;
+                    }
+                }
             }
         }
 
@@ -667,7 +674,8 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                 startTesting();
             } else {
                 Toast.makeText(getContext(), "You have learnt all words form this topic", Toast.LENGTH_SHORT).show();
-                ((MainActivity)getActivity()).displayMainInfoFragment();
+                ((MainActivity)getActivity()).onBackPressed();
+                return;
             }
             return;
         } else {
@@ -695,6 +703,7 @@ public class TestFragment extends Fragment implements LetterAdapter.OnLetterClic
                     //setTestImage(demonstrationWords.get(0).imageUrl);
                 } else {
                     launchWordsForLearningDemonstration(topicName);
+                    return;
                 }
             }
         });
