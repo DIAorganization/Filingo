@@ -27,15 +27,15 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/topic_icn"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="65dp"
+            android:layout_height="63dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="@+id/card_topic_chooser_background"
             app:layout_constraintTop_toTopOf="@+id/card_topic_chooser_background"
-            app:srcCompat="@drawable/hardware_icn"
-            app:shapeAppearanceOverlay="@style/round_image_30" />
+            app:shapeAppearanceOverlay="@style/round_image_30"
+            app:srcCompat="@drawable/hardware_icn" />
 
         <TextView
             android:id="@+id/topic_name"
@@ -57,16 +57,16 @@
         <ProgressBar
             android:id="@+id/topic_progress_bar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="180dp"
-            android:layout_height="6dp"
-            android:layout_marginBottom="16dp"
+            android:layout_width="163dp"
+            android:layout_height="7dp"
+            android:layout_marginBottom="24dp"
             android:indeterminate="false"
-            android:progress="25"
             android:indeterminateTint="@color/white"
+            android:progress="25"
             android:progressDrawable="@drawable/progress_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/topic_name"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="@+id/topic_name" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

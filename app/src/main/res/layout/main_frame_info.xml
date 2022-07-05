@@ -30,19 +30,18 @@
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/background_3" />
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/topic_chooser"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_menu_horizontal_bottom_guideline"
+        android:layout_marginTop="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/main_frame_random_test_button"
         app:layout_constraintEnd_toStartOf="@+id/main_frame_vertical_right_guideline"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="@+id/main_frame_vertical_left_guideline"
-        app:layout_constraintTop_toTopOf="@+id/top_info_horizontal_bottom_guideline" />
-
-
-
+        app:layout_constraintTop_toTopOf="@+id/top_info_horizontal_bottom_guideline"
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_icn"
@@ -82,7 +81,7 @@
         android:id="@+id/progress_text"
         android:layout_width="0dp"
         android:layout_height="30dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="76dp"
 
         android:fontFamily="sans-serif"
         android:includeFontPadding="false"
@@ -158,7 +157,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.03"/>
+        app:layout_constraintGuide_percent="0.02" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom_menu_horizontal_top_guideline"
@@ -188,7 +187,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="@+id/progress_text"
         app:layout_constraintTop_toBottomOf="@+id/progress_text"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.75" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/main_frame_grammar_info_button"
